@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class DetailPeriksa extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'id_periksa', 'id_obat',
+    ];
+
+    /**
+     * Relasi ke Periksa
+     */
+    public function periksa(): BelongsTo
+    {
+        return $this->belongsTo(Periksa::class, 'id_periksa');
+    }
+}
