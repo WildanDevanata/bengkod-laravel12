@@ -12,7 +12,11 @@ class Periksa extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_pasien', 'id_dokter', 'tgl_periksa', 'catatan', 'biaya_periksa',
+        'id_pasien',
+        'id_dokter',
+        'tgl_periksa',
+        'catatan',
+        'biaya_periksa',
     ];
 
     /**
@@ -35,8 +39,7 @@ class Periksa extends Model
      * Relasi: Periksa memiliki banyak DetailPeriksa
      */
     public function detailPeriksas(): HasMany
-{
-    return $this->hasMany(DetailPeriksa::class, 'id_periksa');
-}
-
+    {
+        return $this->hasMany(DetailPeriksa::class, 'id_periksa');
+    }
 }

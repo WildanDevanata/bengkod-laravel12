@@ -11,7 +11,8 @@ class DetailPeriksa extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_periksa', 'id_obat',
+        'id_periksa',
+        'id_obat',
     ];
 
     /**
@@ -20,5 +21,13 @@ class DetailPeriksa extends Model
     public function periksa(): BelongsTo
     {
         return $this->belongsTo(Periksa::class, 'id_periksa');
+    }
+
+    /**
+     * Relasi ke Obat
+     */
+    public function obat(): BelongsTo
+    {
+        return $this->belongsTo(Obat::class, 'id_obat');
     }
 }
