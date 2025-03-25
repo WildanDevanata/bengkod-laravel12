@@ -7,9 +7,19 @@ use App\Models\Periksa;
 
 class PasienController extends Controller
 {
-    public function index()
+    public function dashboard()
+    {
+        return view('pasien.dashboard');
+    }
+
+    public function periksa()
+    {
+        return view('pasien.periksa');
+    }
+
+    public function riwayat()
     {
         $periksas = Periksa::with('pasien')->get();
-        return view('pasien.dashboard', compact('periksas'));
+        return view('pasien.riwayat', compact('periksas'));
     }
 }
