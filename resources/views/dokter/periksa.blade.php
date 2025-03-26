@@ -1,6 +1,7 @@
-@extends('components.layout')
+@extends('components.layoutdokter')
 
 @section('content') 
+<h1>Periksa</h1>
     <div class="row">
         <div class="col-12">
             <div class="card">

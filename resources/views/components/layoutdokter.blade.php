@@ -204,33 +204,28 @@
 
             <!-- Sidebar Menu -->
 
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
-                    <!-- Add icons to the links using the .nav-icon class
-                         with font-awesome or any other icon font library -->
-                    <li class="nav-item menu-open">
-                        <a href="/dashboard" class="nav-link active">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Dashboard
-                            </p>
-                        </a>
-                    <li class="nav-item">
-                        <a href="pages/widgets.html" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
-                            <p>
-                                Periksa
-                            </p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="pages/widgets.html" class="nav-link">
-                            <i class="nav-icon fas fa-book"></i>
-                            <p>
-                                Riwayat
-                            </p>
-                        </a>
-                </ul>
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item menu-open">
+                    <a href="{{ route('dokter.dashboard') }}" class="nav-link {{ request()->is('dokter/dashboard') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('dokter.periksa') }}" class="nav-link {{ request()->is('dokter/periksa') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>Periksa</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('dokter.obat') }}" class="nav-link {{ request()->is('dokter/obat*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>Obat</p>
+                    </a>
+                </li>
+            </ul>
+            
+            
             </nav>
             <!-- /.sidebar-menu -->
         </div>
@@ -238,18 +233,18 @@
     </aside>
 
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" >
         <!-- Content Header (Page header) -->
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Dashboard</h1>
+                        <h1 class="m-0">Poliklinik User Dokter</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Dashboard v1</li>
+                            <li class="breadcrumb-item active">Dashboard </li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -315,8 +310,8 @@
 <!-- AdminLTE App -->
 <script src="{{asset('lte/dist/js/adminlte.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{asset('lte/dist/js/demo.js')}}"></script>
+{{-- <script src="{{asset('lte/dist/js/demo.js')}}"></script> --}}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('lte/dist/js/pages/dashboard.js')}}"></script>
+{{-- <script src="{{asset('lte/dist/js/pages/dashboard.js')}}"></script> --}}
 </body>
 </html>

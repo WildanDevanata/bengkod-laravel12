@@ -1,8 +1,8 @@
-@extends('components.layout')
+@extends('components.layoutpasien')
 
 @section('content')
-<h1>Dashboard</h1>
 <section class="content">
+    <h1>Dashboard</h1>
     <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">

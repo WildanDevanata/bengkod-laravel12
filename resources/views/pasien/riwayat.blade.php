@@ -1,8 +1,7 @@
-@extends('components.layout')
+@extends('components.layoutpasien')
 
-@section('content')
-
-    
+@section('content') 
+<h1>Riwayat</h1>
     <div class="row">
         <div class="col-12">
             <div class="card">

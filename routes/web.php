@@ -21,19 +21,15 @@ Route::get('/register', function () {
 });
 
 Route::prefix('dokter')->group(function () {
-    Route::get('/', function () {
+    Route::get('/dashboard', function () {
         return view('dokter.dashboard');
-    });
-});
+    })->name('dokter.dashboard');
 
-Route::prefix('dokter')->group(function () {
     Route::get('/periksa', [DokterController::class, 'periksa'])->name('dokter.periksa');
-});
 
-Route::prefix('dokter')->group(function () {
     Route::match(['get', 'post'], '/obat', [DokterController::class, 'obat'])->name('dokter.obat');
     Route::get('/obat/edit/{id}', [DokterController::class, 'editObat'])->name('dokter.obat.edit');
-    Route::post('/dokter/obat/update/{id}', [DokterController::class, 'updateObat'])->name('dokter.obat.update');
+    Route::post('/obat/update/{id}', [DokterController::class, 'updateObat'])->name('dokter.obat.update');
     Route::delete('/obat/delete/{id}', [DokterController::class, 'deleteObat'])->name('dokter.obat.delete');
 });
 

@@ -1,8 +1,9 @@
-@extends('components.layout')
+@extends('components.layoutpasien')
 
 @section('content')
 <!-- Main content -->
 <section class="content">
+  <h1>Periksa</h1>
     <div class="row">
       <div class="col-md-6">
         <div class="card card-primary">
