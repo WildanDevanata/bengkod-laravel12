@@ -34,13 +34,15 @@ Route::prefix('dokter')->group(function () {
 });
 
 Route::prefix('pasien')->group(function () {
-    Route::get('/riwayat', [PasienController::class, 'riwayat'])->name('pasien.riwayat');
-});
-
-Route::prefix('pasien')->group(function () {
     Route::get('/dashboard', [PasienController::class, 'dashboard'])->name('pasien.dashboard');
-});
-
-Route::prefix('pasien')->group(function () {
     Route::get('/periksa', [PasienController::class, 'periksa'])->name('pasien.periksa');
+    Route::post('/periksa', [PasienController::class, 'storePeriksa'])->name('pasien.storePeriksa');
+    Route::get('/riwayat', [PasienController::class, 'riwayat'])->name('pasien.riwayat');
+    
+    // Edit and update routes
+    Route::get('/periksa/{id}/edit', [PasienController::class, 'editPeriksa'])->name('pasien.editPeriksa');
+    Route::put('/periksa/{id}', [PasienController::class, 'updatePeriksa'])->name('pasien.updatePeriksa');
+    
+    // Delete route
+    Route::delete('/periksa/{id}', [PasienController::class, 'deletePeriksa'])->name('pasien.deletePeriksa');
 });

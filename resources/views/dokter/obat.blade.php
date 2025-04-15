@@ -49,7 +49,7 @@
                     @foreach ($obats as $index => $obat)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $obat->id }}</td>
+                            <td>{{ 'B' . str_pad($obat->id, 3, '0', STR_PAD_LEFT) }}</td>
                             <td>{{ $obat->nama_obat }}</td>
                             <td>{{ $obat->kemasan }}</td>
                             <td>{{ number_format($obat->harga, 0, ',', '.') }}</td>

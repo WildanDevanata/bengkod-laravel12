@@ -4,6 +4,12 @@
 <h1>Riwayat</h1>
     <div class="row">
         <div class="col-12">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Daftar Pemeriksaan</h3>
@@ -19,6 +25,7 @@
                                 <th>Tanggal Periksa</th>
                                 <th>Catatan Dokter</th>
                                 <th>Biaya Periksa</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,10 +37,22 @@
                                     <td>{{ $p->tgl_periksa }}</td>
                                     <td>{{ $p->catatan }}</td>
                                     <td>{{ number_format($p->biaya_periksa, 0, ',', '.') }}</td>
+                                    <td>
+                                        <a href="{{ route('pasien.editPeriksa', $p->id) }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form action="{{ route('pasien.deletePeriksa', $p->id) }}" method="POST" style="display: inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">Tidak ada data</td>
+                                    <td colspan="7" class="text-center">Tidak ada data</td>
                                 </tr>
                             @endforelse
                         </tbody>
