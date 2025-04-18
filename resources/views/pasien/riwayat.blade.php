@@ -9,12 +9,12 @@
                     {{ session('success') }}
                 </div>
             @endif
-            
+
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Daftar Pemeriksaan</h3>
                 </div>
-                
+
                 <div class="card-body table-responsive p-0">
                     <table class="table table-hover text-nowrap">
                         <thead>
@@ -23,6 +23,7 @@
                                 <th>ID</th>
                                 <th>Nama Pasien</th>
                                 <th>Tanggal Periksa</th>
+                                <th>Nama Dokter</th>
                                 <th>Catatan Dokter</th>
                                 <th>Biaya Periksa</th>
                                 <th>Aksi</th>
@@ -35,6 +36,7 @@
                                     <td>{{ $p->id }}</td>
                                     <td>{{ $p->pasien->nama ?? 'Tidak ada data' }}</td>
                                     <td>{{ $p->tgl_periksa }}</td>
+                                    <td>{{ $p->dokter->nama ?? 'Tidak diketahui' }}</td>
                                     <td>{{ $p->catatan }}</td>
                                     <td>{{ number_format($p->biaya_periksa, 0, ',', '.') }}</td>
                                     <td>
@@ -52,7 +54,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">Tidak ada data</td>
+                                    <td colspan="8" class="text-center">Tidak ada data</td>
                                 </tr>
                             @endforelse
                         </tbody>

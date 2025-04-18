@@ -17,6 +17,7 @@ class Periksa extends Model
         'tgl_periksa',
         'catatan',
         'biaya_periksa',
+        'id_obat', // Pastikan kolom ini ada di tabel
     ];
 
     /**
@@ -42,4 +43,22 @@ class Periksa extends Model
     {
         return $this->hasMany(DetailPeriksa::class, 'id_periksa');
     }
+
+    /**
+     * Relasi: Periksa memiliki satu Obat
+     */
+    public function obat(): BelongsTo
+    {
+        return $this->belongsTo(Obat::class, 'id_obat');
+    }
+    /**
+ * Get the main obat for this periksa
+ */
+public function getObatAttribute()
+{
+    if ($this->detailPeriksas->isNotEmpty() && $this->detailPeriksas->first()->obat) {
+        return $this->detailPeriksas->first()->obat;
+    }
+    return null;
+}
 }

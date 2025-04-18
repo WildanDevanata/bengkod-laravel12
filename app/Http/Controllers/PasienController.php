@@ -6,155 +6,164 @@ use Illuminate\Http\Request;
 use App\Models\Periksa;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PasienController extends Controller
 {
-    public function dashboard()
+    public function index()
     {
-        return view('pasien.dashboard');
+        // Mengambil data pengguna yang login
+        $pasien = Auth::user();
+        return view('pasien.dashboard', ['namaPasien' => $pasien->nama]);
     }
+
+    public function dashboard()
+{
+    $user = Auth::user();
+
+    // Ambil jumlah riwayat periksa dari pasien yang login
+    $jumlahPeriksa = Periksa::where('id_pasien', $user->id)->count();
+
+    return view('pasien.dashboard', [
+        'namaPasien' => $user->nama,
+        'jumlahPeriksa' => $jumlahPeriksa
+    ]);
+}
+
 
     public function periksa()
     {
-        // Option 1: Hardcoded doctors for now
-        $dokters = [
-            ['id' => 1, 'nama' => 'Dr. Arif Setiawan'],
-            ['id' => 2, 'nama' => 'Dr. Dewi Sartika'],
-            ['id' => 3, 'nama' => 'Dr. Budi Santoso']
-        ];
-        
-        // Convert array to collection for consistency
-        $dokters = collect($dokters);
-        
-        return view('pasien.periksa', compact('dokters'));
+        // Mendapatkan data dokter yang tersedia
+        $dokters = User::where('role', 'dokter')->get();
+        // Mengambil data pengguna yang login
+        $user = Auth::user();
+        $namaPasien = $user->nama;
+
+        // Menampilkan halaman form pemeriksaan
+        return view('pasien.periksa', compact('dokters', 'user', 'namaPasien'));
     }
 
     public function storePeriksa(Request $request)
     {
-        // Validate incoming request
+        // Validasi input dari form
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:15',
-            'id_dokter' => 'required',
-            'catatan' => 'nullable|string'
+            'id_dokter' => 'required|integer|exists:users,id',
+            'catatan' => 'nullable|string',
+            'tgl_periksa' => 'required|date', // Validasi untuk tanggal periksa
         ]);
 
-        // Create new periksa record
-        $periksa = new Periksa();
-        
-        // Get the current user ID if logged in, otherwise find/create a user based on name
-        if (Auth::check()) {
-            $periksa->id_pasien = Auth::id();
-        } else {
-            // Find or create a user with the given name
-            $user = User::firstOrCreate(
-                ['nama' => $request->nama],
-                [
-                    'email' => strtolower(str_replace(' ', '', $request->nama)) . '@example.com',
-                    'no_hp' => $request->no_hp,
-                    'password' => bcrypt('password123') // Set a default password
-                ]
-            );
-            $periksa->id_pasien = $user->id;
-        }
-        
-        $periksa->id_dokter = $request->id_dokter;
-        $periksa->tgl_periksa = now();
-        $periksa->catatan = $request->catatan;
-        $periksa->biaya_periksa = 150000; // Default price
-        $periksa->save();
+        // Mengambil data pasien yang login
+        $user = Auth::user();
 
+        // Biaya pemeriksaan berdasarkan dokter
+        $dokterBiaya = [
+            1 => 200000,
+            2 => 180000,
+            3 => 150000,
+        ];
+
+        // Menyimpan data pemeriksaan ke dalam database
+        $periksa = Periksa::create([
+            'id_pasien' => $user->id,
+            'id_dokter' => $request->id_dokter,
+            'tgl_periksa' => Carbon::parse($request->tgl_periksa), // Menyimpan tanggal pemeriksaan
+            'catatan' => $request->catatan,
+            'biaya_periksa' => $dokterBiaya[$request->id_dokter] ?? 150000,
+        ]);
+
+        // Redirect ke halaman riwayat dengan pesan sukses
         return redirect()->route('pasien.riwayat')->with('success', 'Permintaan pemeriksaan berhasil dikirim');
     }
 
     public function riwayat()
     {
-        // If user is logged in, show only their records
-        if (Auth::check()) {
-            $periksas = Periksa::with('pasien')
-                ->where('id_pasien', Auth::id())
-                ->orderBy('tgl_periksa', 'desc')
-                ->get();
-        } else {
-            // Otherwise show all records (for testing purposes)
-            $periksas = Periksa::with('pasien')
-                ->orderBy('tgl_periksa', 'desc')
-                ->get();
+        // Mengambil data pasien yang login
+        $user = Auth::user();
+
+        // Mengambil data pemeriksaan yang terkait dengan pasien yang login
+        $periksas = Periksa::with(['pasien', 'dokter'])
+            ->where('id_pasien', $user->id)
+            ->orderBy('tgl_periksa', 'desc')
+            ->get();
+
+        // Menformat tanggal periksa dengan Carbon
+        foreach ($periksas as $periksa) {
+            // Pastikan tgl_periksa adalah objek Carbon
+            $periksa->tgl_periksa = Carbon::parse($periksa->tgl_periksa)->format('d-m-Y');
         }
-        
-        return view('pasien.riwayat', compact('periksas'));
+
+        // Menampilkan riwayat pemeriksaan pasien
+        return view('pasien.riwayat', [
+            'periksas' => $periksas,
+            'namaPasien' => $user->nama
+        ]);
     }
 
     public function editPeriksa($id)
     {
+        // Mengambil data pemeriksaan berdasarkan ID
         $periksa = Periksa::with('pasien')->findOrFail($id);
-        
-        // Check if the user is authorized to edit this record
-        if (Auth::check() && Auth::id() !== $periksa->id_pasien) {
-            return redirect()->route('pasien.riwayat')
-                ->with('error', 'Anda tidak memiliki izin untuk mengedit data ini');
+
+        // Mengecek apakah pasien yang login adalah pemilik pemeriksaan ini
+        if (Auth::id() !== $periksa->id_pasien) {
+            return redirect()->route('pasien.riwayat')->with('error', 'Anda tidak memiliki izin untuk mengedit data ini');
         }
-        
-        // Same doctor data as in periksa method
-        $dokters = [
-            ['id' => 1, 'nama' => 'Dr. Arif Setiawan'],
-            ['id' => 2, 'nama' => 'Dr. Dewi Sartika'],
-            ['id' => 3, 'nama' => 'Dr. Budi Santoso']
-        ];
-        
-        $dokters = collect($dokters);
-        
-        // Change from 'pasien.edit-periksa' to 'pasien.edit' to match your views directory structure
-        return view('pasien.edit', compact('periksa', 'dokters'));
+
+        // Mengambil data dokter yang tersedia
+        $dokters = User::where('role', 'dokter')->get();
+        $namaPasien = Auth::user()->nama;
+
+        // Menampilkan form edit pemeriksaan
+        return view('pasien.edit', compact('periksa', 'dokters', 'namaPasien'));
     }
 
     public function updatePeriksa(Request $request, $id)
-    {
-        // Validate incoming request
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_hp' => 'required|string|max:15',
-            'id_dokter' => 'required',
-            'catatan' => 'nullable|string'
-        ]);
+{
+    // Validasi input form
+    $request->validate([
+        'nama' => 'required|string|max:255',
+        'id_dokter' => 'required|integer|exists:users,id',
+        'catatan' => 'nullable|string',
+        'tgl_periksa' => 'required|date',
+    ]);
 
-        $periksa = Periksa::findOrFail($id);
-        
-        // Check if the user is authorized to update this record
-        if (Auth::check() && Auth::id() !== $periksa->id_pasien) {
-            return redirect()->route('pasien.riwayat')
-                ->with('error', 'Anda tidak memiliki izin untuk mengedit data ini');
-        }
-        
-        // Update user data if changed
-        $user = User::findOrFail($periksa->id_pasien);
-        $user->nama = $request->nama;
-        $user->no_hp = $request->no_hp;
-        $user->save();
-        
-        // Update periksa data
-        $periksa->id_dokter = $request->id_dokter;
-        $periksa->catatan = $request->catatan;
-        $periksa->save();
+    // Ambil data periksa berdasarkan ID
+    $periksa = Periksa::findOrFail($id);
 
-        return redirect()->route('pasien.riwayat')
-            ->with('success', 'Data pemeriksaan berhasil diperbarui');
+    // Cek apakah pasien yang login adalah pemilik data
+    if (Auth::id() !== $periksa->id_pasien) {
+        return redirect()->route('pasien.riwayat')->with('error', 'Anda tidak memiliki izin untuk mengedit data ini');
     }
+
+    // Update nama pasien (di model User)
+    $pasien = $periksa->pasien;
+    $pasien->nama = $request->nama;
+    $pasien->save();
+
+    // Update data pemeriksaan
+    $periksa->id_dokter = $request->id_dokter;
+    $periksa->catatan = $request->catatan;
+    $periksa->tgl_periksa = \Carbon\Carbon::parse($request->tgl_periksa);
+    $periksa->save();
+
+    return redirect()->route('pasien.riwayat')->with('success', 'Data pemeriksaan berhasil diperbarui');
+}
+
 
     public function deletePeriksa($id)
     {
+        // Mengambil data pemeriksaan berdasarkan ID
         $periksa = Periksa::findOrFail($id);
-        
-        // Check if the user is authorized to delete this record
-        if (Auth::check() && Auth::id() !== $periksa->id_pasien) {
-            return redirect()->route('pasien.riwayat')
-                ->with('error', 'Anda tidak memiliki izin untuk menghapus data ini');
+
+        // Mengecek apakah pasien yang login adalah pemilik pemeriksaan ini
+        if (Auth::id() !== $periksa->id_pasien) {
+            return redirect()->route('pasien.riwayat')->with('error', 'Anda tidak memiliki izin untuk menghapus data ini');
         }
-        
+
+        // Menghapus data pemeriksaan
         $periksa->delete();
-        
-        return redirect()->route('pasien.riwayat')
-            ->with('success', 'Data pemeriksaan berhasil dihapus');
+
+        // Redirect ke halaman riwayat dengan pesan sukses
+        return redirect()->route('pasien.riwayat')->with('success', 'Data pemeriksaan berhasil dihapus');
     }
 }

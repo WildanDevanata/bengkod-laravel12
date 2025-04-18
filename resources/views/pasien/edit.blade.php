@@ -22,18 +22,21 @@
                 {{ session('error') }}
               </div>
             @endif
-            
+
             <form action="{{ route('pasien.updatePeriksa', $periksa->id) }}" method="POST">
               @csrf
               @method('PUT')
+
+              <!-- Nama Pasien -->
               <div class="form-group">
                 <label for="inputName">Nama Anda</label>
                 <input type="text" id="inputName" name="nama" class="form-control" value="{{ $periksa->pasien->nama ?? '' }}" placeholder="Masukkan nama Anda" required>
               </div>
-              <div class="form-group">
-                <label for="inputPhone">Nomor HP</label>
-                <input type="text" id="inputPhone" name="no_hp" class="form-control" value="{{ $periksa->pasien->no_hp ?? '' }}" placeholder="Masukkan nomor HP Anda" required>
-              </div>
+
+              <!-- Nomor HP Pasien -->
+            
+
+              <!-- Pilih Dokter -->
               <div class="form-group">
                 <label for="dokter">Pilih Dokter</label>
                 <select id="dokter" name="id_dokter" class="form-control custom-select" required>
@@ -45,10 +48,19 @@
                   @endforeach
                 </select>
               </div>
+
+              <!-- Tanggal Pemeriksaan -->
               <div class="form-group">
-                <label for="catatan">Keluhan</label>
+                <label for="tgl_periksa">Tanggal Pemeriksaan</label>
+                <input type="date" id="tgl_periksa" name="tgl_periksa" class="form-control" value="{{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('Y-m-d') }}" required>
+              </div>
+
+              <!-- Catatan Dokter -->
+              <div class="form-group">
+                <label for="catatan">Catatan Dokter</label>
                 <textarea id="catatan" name="catatan" class="form-control" rows="4" placeholder="Deskripsikan keluhan Anda">{{ $periksa->catatan }}</textarea>
               </div>
+
               <div class="row">
                 <div class="col-12">
                   <button type="submit" class="btn btn-success">Update</button>
@@ -62,5 +74,5 @@
         <!-- /.card -->
       </div>
     </div>
-  </section>
+</section>
 @endsection
