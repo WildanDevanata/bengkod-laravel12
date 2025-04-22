@@ -1,4 +1,4 @@
-Berikut adalah contoh langkah dan deskripsi yang dapat Anda gunakan pada README untuk proyek GitHub Anda:
+Berikut adalah contoh langkah dan deskripsi untuk menjalankan project laravel 12
 
 ---
 
