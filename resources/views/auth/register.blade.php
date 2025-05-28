@@ -2,90 +2,116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="{{ asset('lte/plugins/fontawesome-free/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css') }}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .register-container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
-<body class="hold-transition register-page">
+<body>
+<div class="container">
+    <div class="register-container">
+        <h2 class="form-title">Register</h2>
 
-<div class="register-box">
-    <div class="card card-outline card-primary">
-        <div class="card-header text-center">
-            <a href="#" class="h1"><b>Admin</b>LTE</a>
-        </div>
-        <div class="card-body">
-            <p class="login-box-msg">Register a new membership</p>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+        <form method="POST" action="{{ url('/register') }}">
+            @csrf
 
-            <form action="{{ route('register.post') }}" method="POST">
-                @csrf
-                <div class="input-group mb-3">
-                    <input name="nama" type="text" class="form-control" placeholder="Nama Lengkap" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-user"></span></div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Nama</label>
+                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
+                       value="{{ old('name') }}" required autofocus>
+            </div>
 
-                <div class="input-group mb-3">
-                    <input name="alamat" type="text" class="form-control" placeholder="Alamat" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-map-marker-alt"></span></div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
+                       value="{{ old('email') }}" required>
+            </div>
 
-                <div class="input-group mb-3">
-                    <input name="no_hp" type="text" class="form-control" placeholder="No. HP" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-phone"></span></div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label for="no_hp" class="form-label">no_hp</label>
+                <input type="no_hp" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp" name="no_hp"
+                       value="{{ old('no_hp') }}" required>
+            </div>
 
-                <div class="input-group mb-3">
-                    <input name="email" type="email" class="form-control" placeholder="Email" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-envelope"></span></div>
-                    </div>
-                </div>
 
-                <div class="input-group mb-3">
-                    <input name="password" type="password" class="form-control" placeholder="Password" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-lock"></span></div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
+                       name="password" required>
+            </div>
 
-                <div class="input-group mb-3">
-                    <input name="password_confirmation" type="password" class="form-control" placeholder="Konfirmasi Password" required>
-                    <div class="input-group-append">
-                        <div class="input-group-text"><span class="fas fa-lock"></span></div>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
+                       required>
+            </div>
 
-                <div class="row">
-                    <div class="col-8">
-                        <a href="{{ route('login') }}" class="text-center">Sudah punya akun?</a>
-                    </div>
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
-                    </div>
-                </div>
-            </form>
+            <div class="mb-3">
+                <label for="role" class="form-label">Daftar Sebagai</label>
+                <select class="form-select @error('role') is-invalid @enderror" id="role" name="role">
+                    <option value="pasien" selected>Pasien</option>
+                    <option value="dokter">Dokter</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="alamat" class="form-label">Alamat</label>
+                <input type="alamat" class="form-control @error('alamat') is-invalid @enderror" id="alamat"
+                       name="alamat" required>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary btn-register">Register</button>
+        </form>
+
+        <div class="login-link">
+            <p>Sudah punya akun? <a href="{{ url('/login') }}">Login disini</a></p>
         </div>
     </div>
 </div>
 
-<script src="{{ asset('lte/plugins/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('lte/dist/js/adminlte.min.js') }}"></script>
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

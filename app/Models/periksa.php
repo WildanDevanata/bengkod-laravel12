@@ -4,12 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Periksa extends Model
 {
     use HasFactory;
+
+    protected $table = "periksas";
 
     protected $fillable = [
         'id_pasien',
@@ -17,48 +17,43 @@ class Periksa extends Model
         'tgl_periksa',
         'catatan',
         'biaya_periksa',
-        'id_obat', // Pastikan kolom ini ada di tabel
+        'id_janji_periksa'
     ];
 
-    /**
-     * Relasi: Periksa milik seorang Pasien (User)
-     */
-    public function pasien(): BelongsTo
+    public function pasien()
     {
         return $this->belongsTo(User::class, 'id_pasien');
     }
 
-    /**
-     * Relasi: Periksa milik seorang Dokter (User)
-     */
-    public function dokter(): BelongsTo
+    public function dokter()
     {
-        return $this->belongsTo(User::class, 'id_dokter');
+        return $this->belongsTo(User::class, 'id_dokter')->where('role', 'dokter');
     }
 
-    /**
-     * Relasi: Periksa memiliki banyak DetailPeriksa
-     */
-    public function detailPeriksas(): HasMany
+    public function janjiPeriksa()
+    {
+        return $this->belongsTo(JanjiPeriksa::class, 'id_janji_periksa');
+    }
+
+    public function getTglPeriksaFormattedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->tgl_periksa)->format('d M Y H:i');
+    }
+
+    public function obat()
+    {
+        return $this->belongsToMany(Obat::class, 'detail_periksas', 'id_periksa', 'id_obat');
+    }
+
+    public function detailPeriksas()
     {
         return $this->hasMany(DetailPeriksa::class, 'id_periksa');
     }
 
-    /**
-     * Relasi: Periksa memiliki satu Obat
-     */
-    public function obat(): BelongsTo
+    public static function getPeriksaByDokterId($dokterId)
     {
-        return $this->belongsTo(Obat::class, 'id_obat');
+        return self::where('id_dokter', $dokterId)
+            ->with(['dokter', 'pasien'])
+            ->get();
     }
-    /**
- * Get the main obat for this periksa
- */
-public function getObatAttribute()
-{
-    if ($this->detailPeriksas->isNotEmpty() && $this->detailPeriksas->first()->obat) {
-        return $this->detailPeriksas->first()->obat;
-    }
-    return null;
-}
 }

@@ -2,168 +2,119 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\JadwalPeriksa;
+use App\Models\JanjiPeriksa;
+use App\Models\Obat;
 use App\Models\Periksa;
+use App\Models\Poli;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class PasienController extends Controller
 {
-    public function index()
+    public function showRiwayat()
     {
-        // Mengambil data pengguna yang login
-        $pasien = Auth::user();
-        return view('pasien.dashboard', ['namaPasien' => $pasien->nama]);
-    }
-
-    public function dashboard()
-{
-    $user = Auth::user();
-
-    // Ambil jumlah riwayat periksa dari pasien yang login
-    $jumlahPeriksa = Periksa::where('id_pasien', $user->id)->count();
-
-    return view('pasien.dashboard', [
-        'namaPasien' => $user->nama,
-        'jumlahPeriksa' => $jumlahPeriksa
-    ]);
-}
+        $id_pasien = Auth::user()->id;
 
 
-    public function periksa()
-    {
-        // Mendapatkan data dokter yang tersedia
-        $dokters = User::where('role', 'dokter')->get();
-        // Mengambil data pengguna yang login
-        $user = Auth::user();
-        $namaPasien = $user->nama;
-
-        // Menampilkan halaman form pemeriksaan
-        return view('pasien.periksa', compact('dokters', 'user', 'namaPasien'));
-    }
-
-    public function storePeriksa(Request $request)
-    {
-        // Validasi input dari form
-        $request->validate([
-            'id_dokter' => 'required|integer|exists:users,id',
-            'catatan' => 'nullable|string',
-            'tgl_periksa' => 'required|date', // Validasi untuk tanggal periksa
-        ]);
-
-        // Mengambil data pasien yang login
-        $user = Auth::user();
-
-        // Biaya pemeriksaan berdasarkan dokter
-        $dokterBiaya = [
-            1 => 200000,
-            2 => 180000,
-            3 => 150000,
-        ];
-
-        // Menyimpan data pemeriksaan ke dalam database
-        $periksa = Periksa::create([
-            'id_pasien' => $user->id,
-            'id_dokter' => $request->id_dokter,
-            'tgl_periksa' => Carbon::parse($request->tgl_periksa), // Menyimpan tanggal pemeriksaan
-            'catatan' => $request->catatan,
-            'biaya_periksa' => $dokterBiaya[$request->id_dokter] ?? 150000,
-        ]);
-
-        // Redirect ke halaman riwayat dengan pesan sukses
-        return redirect()->route('pasien.riwayat')->with('success', 'Permintaan pemeriksaan berhasil dikirim');
-    }
-
-    public function riwayat()
-    {
-        // Mengambil data pasien yang login
-        $user = Auth::user();
-
-        // Mengambil data pemeriksaan yang terkait dengan pasien yang login
-        $periksas = Periksa::with(['pasien', 'dokter'])
-            ->where('id_pasien', $user->id)
-            ->orderBy('tgl_periksa', 'desc')
+        $periksas = Periksa::with(['pasien', 'obat','janjiPeriksa.jadwalPeriksa.dokter'])
+            ->where('id_pasien', $id_pasien)
             ->get();
 
-        // Menformat tanggal periksa dengan Carbon
-        foreach ($periksas as $periksa) {
-            // Pastikan tgl_periksa adalah objek Carbon
-            $periksa->tgl_periksa = Carbon::parse($periksa->tgl_periksa)->format('d-m-Y');
-        }
-
-        // Menampilkan riwayat pemeriksaan pasien
-        return view('pasien.riwayat', [
-            'periksas' => $periksas,
-            'namaPasien' => $user->nama
-        ]);
+        return view('pasien.riwayat', compact('periksas'));
     }
 
-    public function editPeriksa($id)
+
+    public function createJanjiPeriksa(Request $request)
     {
-        // Mengambil data pemeriksaan berdasarkan ID
-        $periksa = Periksa::with('pasien')->findOrFail($id);
+        try {
+            $validatedData = $request->validate([
+                'id_pasien' => 'required|exists:users,id',
+                'id_jadwal_periksa' => 'required|exists:jadwal_periksa,id',
+                'keluhan' => 'required|string|max:500',
+            ]);
 
-        // Mengecek apakah pasien yang login adalah pemilik pemeriksaan ini
-        if (Auth::id() !== $periksa->id_pasien) {
-            return redirect()->route('pasien.riwayat')->with('error', 'Anda tidak memiliki izin untuk mengedit data ini');
+            // Generate nomor antrian otomatis
+            $lastAntrian = JanjiPeriksa::where('id_jadwal_periksa', $validatedData['id_jadwal_periksa'])
+                ->max('no_antrian');
+            $noAntrian = $lastAntrian ? $lastAntrian + 1 : 1;
+
+            // Cek apakah pasien sudah memiliki janji pada jadwal yang sama
+            $existingJanji = JanjiPeriksa::where('id_pasien', $validatedData['id_pasien'])
+                ->where('id_jadwal_periksa', $validatedData['id_jadwal_periksa'])
+                ->first();
+            if ($existingJanji) {
+                return redirect()->back()->with('error', 'Pasien sudah memiliki janji pada jadwal yang sama.');
+            }
+
+            $validatedData['no_antrian'] = $noAntrian;
+            JanjiPeriksa::create($validatedData);
+
+            return redirect()->route('pasien.janjiPeriksa')->with('success', 'Janji Periksa berhasil dibuat.');
+        } catch (\Exception $e) {
+            Log::error("Error creating janji periksa: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat membuat janji periksa.');
         }
-
-        // Mengambil data dokter yang tersedia
-        $dokters = User::where('role', 'dokter')->get();
-        $namaPasien = Auth::user()->nama;
-
-        // Menampilkan form edit pemeriksaan
-        return view('pasien.edit', compact('periksa', 'dokters', 'namaPasien'));
     }
 
-    public function updatePeriksa(Request $request, $id)
-{
-    // Validasi input form
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'id_dokter' => 'required|integer|exists:users,id',
-        'catatan' => 'nullable|string',
-        'tgl_periksa' => 'required|date',
-    ]);
-
-    // Ambil data periksa berdasarkan ID
-    $periksa = Periksa::findOrFail($id);
-
-    // Cek apakah pasien yang login adalah pemilik data
-    if (Auth::id() !== $periksa->id_pasien) {
-        return redirect()->route('pasien.riwayat')->with('error', 'Anda tidak memiliki izin untuk mengedit data ini');
-    }
-
-    // Update nama pasien (di model User)
-    $pasien = $periksa->pasien;
-    $pasien->nama = $request->nama;
-    $pasien->save();
-
-    // Update data pemeriksaan
-    $periksa->id_dokter = $request->id_dokter;
-    $periksa->catatan = $request->catatan;
-    $periksa->tgl_periksa = \Carbon\Carbon::parse($request->tgl_periksa);
-    $periksa->save();
-
-    return redirect()->route('pasien.riwayat')->with('success', 'Data pemeriksaan berhasil diperbarui');
-}
-
-
-    public function deletePeriksa($id)
+    public function showJanjiPeriksaPasien(Request $request)
     {
-        // Mengambil data pemeriksaan berdasarkan ID
-        $periksa = Periksa::findOrFail($id);
+        $id_pasien = Auth::user()->id;
 
-        // Mengecek apakah pasien yang login adalah pemilik pemeriksaan ini
-        if (Auth::id() !== $periksa->id_pasien) {
-            return redirect()->route('pasien.riwayat')->with('error', 'Anda tidak memiliki izin untuk menghapus data ini');
+        // Ambil riwayat janji periksa yang belum ada di tabel periksas (belum diperiksa)
+        $janjiPeriksas = JanjiPeriksa::with(['jadwalPeriksa.dokter.poli', 'pasien'])
+            ->where('id_pasien', $id_pasien)
+            ->whereDoesntHave('periksa')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil daftar poli untuk form
+        $polis = Poli::all();
+
+        // Jika ada parameter poli_id, ambil jadwal untuk poli tersebut
+        $jadwalPeriksas = collect();
+        if ($request->has('poli_id') && $request->poli_id) {
+            $jadwalPeriksas = JadwalPeriksa::with(['dokter.poli'])
+                ->whereHas('dokter', function($query) use ($request) {
+                    $query->where('poli_id', $request->poli_id);
+                })
+                ->where('status', true)
+                ->orderBy('hari', 'asc')
+                ->orderBy('jam_mulai', 'asc')
+                ->get();
         }
 
-        // Menghapus data pemeriksaan
-        $periksa->delete();
-
-        // Redirect ke halaman riwayat dengan pesan sukses
-        return redirect()->route('pasien.riwayat')->with('success', 'Data pemeriksaan berhasil dihapus');
+        return view('pasien.janjiPeriksa', compact('janjiPeriksas', 'polis', 'jadwalPeriksas'));
     }
+
+// Method ini bisa dihapus atau dijadikan API endpoint saja
+    public function jadwalOpenByPoli($id)
+    {
+        $jadwalPeriksas = JadwalPeriksa::with(['dokter.poli'])
+            ->whereHas('dokter', function($query) use ($id) {
+                $query->where('poli_id', $id);
+            })
+            ->where('status', true)
+            ->orderBy('hari', 'asc')
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+
+        return response()->json(['jadwalPeriksas' => $jadwalPeriksas]);
+    }
+
+    public function pasienDashboard()
+    {
+        $idPasien = Auth::id();
+
+    $totalPeriksa = Periksa::where('id_pasien', $idPasien)->count();
+    $totalSpending = Periksa::where('id_pasien', $idPasien)
+        ->where('biaya_periksa', '>', 0)
+        ->sum('biaya_periksa'); // Lebih tepat untuk total pengeluaran
+
+        return view('pasien.dashboard', compact('totalPeriksa', 'totalSpending'));
+    }
+
+
 }

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,15 +12,23 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 255)->nullable(false);
-            $table->string('alamat', 255)->nullable();
-            $table->string('no_hp', 50)->unique();
+            $table->string('name', 255);
             $table->string('email', 50)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['pasien', 'dokter'])->default('pasien');
+            $table->string('alamat', 255);
+            $table->string('no_hp', 50);
+            $table->string('role', 50)->default('pasien');
             $table->rememberToken();
             $table->timestamps();
+
+            // NEW Fields
+            $table->bigInteger('no_ktp');
+            $table->char('no_rm', 10)->nullable();
+
+            // many to one relationship many user have one poli
+            $table->unsignedBigInteger('poli_id')->nullable();
+            $table->foreign('poli_id')->references('id')->on('poli')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
