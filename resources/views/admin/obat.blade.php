@@ -1,19 +1,63 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('admin.obat') }}" class="nav-link"> <i
-                    class="nav-icon fas fa-th"></i>
-                ObatMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.dokter') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> DokterMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.pasien') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> PasienMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.poliMaster') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-injured"></i> Poli</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.obat') }}" class="nav-link">
+                <i class="nav-icon fas fa-pills"></i>
+                <p>
+                    Obat
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.dokter') }}" class="nav-link">
+                <i class="nav-icon fas fa-user-md"></i>
+                <p>
+                    Dokter
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.pasien') }}" class="nav-link">
+                <i class="nav-icon fas fa-procedures"></i>
+                <p>
+                    Pasien
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.poliMaster') }}" class="nav-link">
+                <i class="nav-icon fas fa-hospital"></i>
+                <p>
+                    Poli
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 
@@ -78,31 +122,32 @@
             <div class="card-body">
                 <table class="table table-striped table-bordered">
                     <thead class="thead-dark">
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Obat</th>
-                        <th>Kemasan</th>
-                        <th>Harga</th>
-                        <th>Aksi</th>
-                    </tr>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Obat</th>
+                            <th>Kemasan</th>
+                            <th>Harga</th>
+                            <th>Aksi</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @forelse($obat as $key => $item)
-                        <tr>
-                            <td>{{ $key + 1 }}</td>
-                            <td>{{ $item->nama_obat }}</td>
-                            <td>{{ $item->kemasan }}</td>
-                            <td>Rp {{ number_format((float) $item->harga, 2, ',', '.') }}</td>
-                            <td>
-                                <a href="{{ url('admin/obat/edit/' . $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="{{ url('admin/obat/delete/' . $item->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus obat ini?')">Hapus</a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">Tidak ada data obat</td>
-                        </tr>
-                    @endforelse
+                        @forelse($obat as $key => $item)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $item->nama_obat }}</td>
+                                <td>{{ $item->kemasan }}</td>
+                                <td>Rp {{ number_format((float) $item->harga, 2, ',', '.') }}</td>
+                                <td>
+                                    <a href="{{ url('admin/obat/edit/' . $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="{{ url('admin/obat/delete/' . $item->id) }}" class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Yakin ingin menghapus obat ini?')">Hapus</a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">Tidak ada data obat</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -128,4 +173,3 @@
         });
     </script>
 @endsection
-

@@ -1,19 +1,63 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('admin.obat') }}" class="nav-link"> <i
-                    class="nav-icon fas fa-th"></i>
-                ObatMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.dokter') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> DokterMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.pasien') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> PasienMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.poliMaster') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-injured"></i> Poli</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.obat') }}" class="nav-link">
+                <i class="nav-icon fas fa-pills"></i>
+                <p>
+                    Obat
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.dokter') }}" class="nav-link">
+                <i class="nav-icon fas fa-user-md"></i>
+                <p>
+                    Dokter
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.pasien') }}" class="nav-link">
+                <i class="nav-icon fas fa-procedures"></i>
+                <p>
+                    Pasien
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.poliMaster') }}" class="nav-link">
+                <i class="nav-icon fas fa-hospital"></i>
+                <p>
+                    Poli
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 
@@ -42,15 +86,18 @@
                     @csrf
                     <div class="form-group">
                         <label for="nama_obat">Nama Obat</label>
-                        <input type="text" name="nama_obat" id="nama_obat" class="form-control" value="{{ $obat->nama_obat }}" required>
+                        <input type="text" name="nama_obat" id="nama_obat" class="form-control"
+                            value="{{ $obat->nama_obat }}" required>
                     </div>
                     <div class="form-group">
                         <label for="kemasan">Kemasan</label>
-                        <input type="text" name="kemasan" id="kemasan" class="form-control" value="{{ $obat->kemasan }}" required>
+                        <input type="text" name="kemasan" id="kemasan" class="form-control" value="{{ $obat->kemasan }}"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="harga">Harga</label>
-                        <input type="number" name="harga" id="harga" class="form-control" value="{{ $obat->harga }}" required>
+                        <input type="number" name="harga" id="harga" class="form-control" value="{{ $obat->harga }}"
+                            required>
                     </div>
                     <div class="form-group text-right">
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

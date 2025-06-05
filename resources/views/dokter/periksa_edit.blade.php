@@ -1,32 +1,54 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item">
-            <a href="{{ route('dokter.dashboard') }}" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>Dashboard</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('dokter.periksa') }}" class="nav-link active">
-                <i class="nav-icon fas fa-stethoscope"></i>
-                <p>Memeriksa</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
-                <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>Jadwal Periksa</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link">
-                <i class="nav-icon fas fa-history"></i>
-                <p>History Periksa</p>
-            </a>
-        </li>
-    </ul>
+<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+    <li class="nav-item">
+        <a href="{{ route('dokter.dashboard') }}" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+                Dashboard
+                <span class="right badge bg-info">Dokter</span>
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('dokter.periksa') }}" class="nav-link">
+            <i class="nav-icon fas fa-stethoscope"></i>
+            <p>
+                Memeriksa
+                <span class="right badge bg-info">Dokter</span>
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
+            <i class="nav-icon fas fa-calendar-alt"></i>
+            <p>
+                Jadwal Periksa
+                <span class="right badge bg-info">Dokter</span>
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link">
+            <i class="nav-icon fas fa-book"></i>
+            <p>
+                History Periksa
+                <span class="right badge bg-info">Dokter</span>
+            </p>
+        </a>
+    </li>
+</ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('title', 'Memeriksa Pasien')

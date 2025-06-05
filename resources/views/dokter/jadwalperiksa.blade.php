@@ -1,16 +1,54 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> Periksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> JadwalPeriksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.historyPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> historyPeriksa</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('dokter.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.periksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-stethoscope"></i>
+                <p>
+                    Memeriksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>
+                    Jadwal Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    History Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 
@@ -57,7 +95,8 @@
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                         <h5><i class="icon fas fa-info-circle"></i> Jadwal Aktif Saat Ini</h5>
                         <strong>{{ ucfirst($activeSchedule->hari) }}</strong> -
-                        {{ date('H:i', strtotime($activeSchedule->jam_mulai)) }} sampai {{ date('H:i', strtotime($activeSchedule->jam_selesai)) }}
+                        {{ date('H:i', strtotime($activeSchedule->jam_mulai)) }} sampai
+                        {{ date('H:i', strtotime($activeSchedule->jam_selesai)) }}
                         <br><small>Hanya satu jadwal yang dapat aktif pada satu waktu.</small>
                     </div>
                 @else
@@ -80,7 +119,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="hari">Hari <span class="text-danger">*</span></label>
-                                        <select class="form-control @error('hari') is-invalid @enderror" id="hari" name="hari" required>
+                                        <select class="form-control @error('hari') is-invalid @enderror" id="hari"
+                                            name="hari" required>
                                             <option value="">Pilih Hari</option>
                                             @foreach($hariOptions as $key => $value)
                                                 <option value="{{ $key }}" {{ old('hari') == $key ? 'selected' : '' }}>
@@ -89,24 +129,26 @@
                                             @endforeach
                                         </select>
                                         @error('hari')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="status">Status <span class="text-danger">*</span></label>
-                                        <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
+                                        <select class="form-control @error('status') is-invalid @enderror" id="status"
+                                            name="status" required>
                                             <option value="">Pilih Status</option>
                                             <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Aktif</option>
-                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
+                                            <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tidak Aktif
+                                            </option>
                                         </select>
                                         @error('status')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
                                         @enderror
                                     </div>
                                 </div>
@@ -116,11 +158,11 @@
                                     <div class="form-group">
                                         <label for="jam_mulai">Jam Mulai <span class="text-danger">*</span></label>
                                         <input type="time" class="form-control @error('jam_mulai') is-invalid @enderror"
-                                               id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai') }}" required>
+                                            id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai') }}" required>
                                         @error('jam_mulai')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
                                         @enderror
                                     </div>
                                 </div>
@@ -128,11 +170,11 @@
                                     <div class="form-group">
                                         <label for="jam_selesai">Jam Selesai <span class="text-danger">*</span></label>
                                         <input type="time" class="form-control @error('jam_selesai') is-invalid @enderror"
-                                               id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai') }}" required>
+                                            id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai') }}" required>
                                         @error('jam_selesai')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
                                         @enderror
                                     </div>
                                 </div>
@@ -164,68 +206,70 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <thead>
-                                    <tr>
-                                        <th style="width: 10px">#</th>
-                                        <th>Hari</th>
-                                        <th>Jam Mulai</th>
-                                        <th>Jam Selesai</th>
-                                        <th>Status</th>
-                                        <th style="width: 200px">Aksi</th>
-                                    </tr>
+                                        <tr>
+                                            <th style="width: 10px">#</th>
+                                            <th>Hari</th>
+                                            <th>Jam Mulai</th>
+                                            <th>Jam Selesai</th>
+                                            <th>Status</th>
+                                            <th style="width: 200px">Aksi</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($jadwalPeriksa as $index => $jadwal)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ ucfirst($jadwal->hari) }}</td>
-                                            <td>{{ date('H:i', strtotime($jadwal->jam_mulai)) }}</td>
-                                            <td>{{ date('H:i', strtotime($jadwal->jam_selesai)) }}</td>
-                                            <td>
-                                                @if($jadwal->status == 1)
-                                                    <span class="badge badge-success">
-                                                        <i class="fas fa-check"></i> Aktif
-                                                    </span>
-                                                @else
-                                                    <span class="badge badge-danger">
-                                                        <i class="fas fa-times"></i> Tidak Aktif
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <!-- Toggle Status Button -->
-                                                <form action="{{ route('dokter.toggleStatusJadwal', $jadwal->id) }}"
-                                                      method="POST" style="display: inline-block;"
-                                                      onsubmit="return confirm('{{ $jadwal->status == 1 ? 'Apakah Anda yakin ingin menonaktifkan jadwal ini?' : 'Apakah Anda yakin ingin mengaktifkan jadwal ini? Jadwal aktif lainnya akan dinonaktifkan.' }}')">
-                                                    @csrf
-                                                    @method('PATCH')
+                                        @foreach($jadwalPeriksa as $index => $jadwal)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ ucfirst($jadwal->hari) }}</td>
+                                                <td>{{ date('H:i', strtotime($jadwal->jam_mulai)) }}</td>
+                                                <td>{{ date('H:i', strtotime($jadwal->jam_selesai)) }}</td>
+                                                <td>
                                                     @if($jadwal->status == 1)
-                                                        <button type="submit" class="btn btn-warning btn-sm" title="Nonaktifkan Jadwal">
-                                                            <i class="fas fa-toggle-off"></i>
-                                                        </button>
+                                                        <span class="badge badge-success">
+                                                            <i class="fas fa-check"></i> Aktif
+                                                        </span>
                                                     @else
-                                                        <button type="submit" class="btn btn-success btn-sm" title="Aktifkan Jadwal">
-                                                            <i class="fas fa-toggle-on"></i>
-                                                        </button>
+                                                        <span class="badge badge-danger">
+                                                            <i class="fas fa-times"></i> Tidak Aktif
+                                                        </span>
                                                     @endif
-                                                </form>
+                                                </td>
+                                                <td>
+                                                    <!-- Toggle Status Button -->
+                                                    <form action="{{ route('dokter.toggleStatusJadwal', $jadwal->id) }}"
+                                                        method="POST" style="display: inline-block;"
+                                                        onsubmit="return confirm('{{ $jadwal->status == 1 ? 'Apakah Anda yakin ingin menonaktifkan jadwal ini?' : 'Apakah Anda yakin ingin mengaktifkan jadwal ini? Jadwal aktif lainnya akan dinonaktifkan.' }}')">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        @if($jadwal->status == 1)
+                                                            <button type="submit" class="btn btn-warning btn-sm"
+                                                                title="Nonaktifkan Jadwal">
+                                                                <i class="fas fa-toggle-off"></i>
+                                                            </button>
+                                                        @else
+                                                            <button type="submit" class="btn btn-success btn-sm"
+                                                                title="Aktifkan Jadwal">
+                                                                <i class="fas fa-toggle-on"></i>
+                                                            </button>
+                                                        @endif
+                                                    </form>
 
-                                                <a href="{{ route('dokter.editJadwal', $jadwal->id) }}"
-                                                   class="btn btn-info btn-sm" title="Edit Jadwal">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
+                                                    <a href="{{ route('dokter.editJadwal', $jadwal->id) }}"
+                                                        class="btn btn-info btn-sm" title="Edit Jadwal">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
 
-                                                <form action="{{ route('dokter.deleteJadwal', $jadwal->id) }}"
-                                                      method="POST" style="display: inline-block;"
-                                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus Jadwal">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                                    <form action="{{ route('dokter.deleteJadwal', $jadwal->id) }}" method="POST"
+                                                        style="display: inline-block;"
+                                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" title="Hapus Jadwal">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -247,10 +291,14 @@
                     <div class="card-body">
                         <ul class="mb-0">
                             <li><strong>Jadwal Aktif:</strong> Hanya satu jadwal yang dapat aktif pada satu waktu</li>
-                            <li><strong>Status Toggle:</strong> Gunakan tombol toggle untuk mengaktifkan/menonaktifkan jadwal dengan cepat</li>
-                            <li><strong>Konflik Waktu:</strong> Sistem akan mencegah jadwal yang bertabrakan pada hari yang sama</li>
-                            <li><strong>Pendaftaran Pasien:</strong> Pasien hanya dapat mendaftar pada jadwal yang statusnya aktif</li>
-                            <li><strong>Otomatisasi:</strong> Mengaktifkan jadwal baru akan otomatis menonaktifkan jadwal yang sedang aktif</li>
+                            <li><strong>Status Toggle:</strong> Gunakan tombol toggle untuk mengaktifkan/menonaktifkan
+                                jadwal dengan cepat</li>
+                            <li><strong>Konflik Waktu:</strong> Sistem akan mencegah jadwal yang bertabrakan pada hari yang
+                                sama</li>
+                            <li><strong>Pendaftaran Pasien:</strong> Pasien hanya dapat mendaftar pada jadwal yang statusnya
+                                aktif</li>
+                            <li><strong>Otomatisasi:</strong> Mengaktifkan jadwal baru akan otomatis menonaktifkan jadwal
+                                yang sedang aktif</li>
                         </ul>
                     </div>
                 </div>
@@ -261,9 +309,9 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 5000);
         });

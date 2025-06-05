@@ -1,19 +1,63 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('admin.obat') }}" class="nav-link"> <i
-                    class="nav-icon fas fa-th"></i>
-                ObatMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.dokter') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-md"></i> DokterMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.pasien') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-injured"></i> PasienMaster</a></li>
-        <li class="nav-item"><a href="{{ route('admin.poliMaster') }}" class="nav-link active"><i
-                    class="nav-icon fas fa-hospital"></i> PoliMaster</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.obat') }}" class="nav-link">
+                <i class="nav-icon fas fa-pills"></i>
+                <p>
+                    Obat
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.dokter') }}" class="nav-link">
+                <i class="nav-icon fas fa-user-md"></i>
+                <p>
+                    Dokter
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.pasien') }}" class="nav-link">
+                <i class="nav-icon fas fa-procedures"></i>
+                <p>
+                    Pasien
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.poliMaster') }}" class="nav-link">
+                <i class="nav-icon fas fa-hospital"></i>
+                <p>
+                    Poli
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('content')
@@ -68,11 +112,10 @@
                                 <div class="form-group">
                                     <label for="nama_poli">Nama Poli <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('nama_poli') is-invalid @enderror"
-                                           id="nama_poli" name="nama_poli"
-                                           value="{{ old('nama_poli', $poli->nama_poli) }}"
-                                           placeholder="Masukkan nama poli" required>
+                                        id="nama_poli" name="nama_poli" value="{{ old('nama_poli', $poli->nama_poli) }}"
+                                        placeholder="Masukkan nama poli" required>
                                     @error('nama_poli')
-                                    <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -81,11 +124,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan</label>
-                                    <textarea class="form-control @error('keterangan') is-invalid @enderror"
-                                              id="keterangan" name="keterangan" rows="3"
-                                              placeholder="Masukkan keterangan (opsional)">{{ old('keterangan', $poli->keterangan) }}</textarea>
+                                    <textarea class="form-control @error('keterangan') is-invalid @enderror" id="keterangan"
+                                        name="keterangan" rows="3"
+                                        placeholder="Masukkan keterangan (opsional)">{{ old('keterangan', $poli->keterangan) }}</textarea>
                                     @error('keterangan')
-                                    <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -99,8 +142,10 @@
                                 <div class="callout callout-info">
                                     <h5><i class="fas fa-info"></i> Informasi:</h5>
                                     <p class="mb-1"><strong>ID Poli:</strong> {{ $poli->id }}</p>
-                                    <p class="mb-1"><strong>Dibuat pada:</strong> {{ $poli->created_at ? $poli->created_at->format('d F Y, H:i:s') : '-' }}</p>
-                                    <p class="mb-0"><strong>Terakhir diupdate:</strong> {{ $poli->updated_at ? $poli->updated_at->format('d F Y, H:i:s') : '-' }}</p>
+                                    <p class="mb-1"><strong>Dibuat pada:</strong>
+                                        {{ $poli->created_at ? $poli->created_at->format('d F Y, H:i:s') : '-' }}</p>
+                                    <p class="mb-0"><strong>Terakhir diupdate:</strong>
+                                        {{ $poli->updated_at ? $poli->updated_at->format('d F Y, H:i:s') : '-' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -168,25 +213,25 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Auto hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 5000);
 
             // Live preview update
-            $('#nama_poli').on('input', function() {
+            $('#nama_poli').on('input', function () {
                 var value = $(this).val() || 'Nama Poli';
                 $('#preview-nama').text(value);
             });
 
-            $('#keterangan').on('input', function() {
+            $('#keterangan').on('input', function () {
                 var value = $(this).val() || 'Tidak ada keterangan';
                 $('#preview-keterangan').text(value);
             });
 
             // Form validation
-            $('form').on('submit', function(e) {
+            $('form').on('submit', function (e) {
                 var namaPoli = $('#nama_poli').val().trim();
 
                 if (namaPoli === '') {
@@ -206,8 +251,8 @@
             });
 
             // Reset button functionality
-            $('button[type="reset"]').on('click', function() {
-                setTimeout(function() {
+            $('button[type="reset"]').on('click', function () {
+                setTimeout(function () {
                     $('#preview-nama').text('{{ $poli->nama_poli }}');
                     $('#preview-keterangan').text('{{ $poli->keterangan ?: "Tidak ada keterangan" }}');
                 }, 100);
@@ -218,26 +263,26 @@
     <!-- SweetAlert2 for better alerts -->
     @if(session('success') || session('error'))
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 @if(session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    timer: 3000,
-                    showConfirmButton: false
-                });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ session('success') }}',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
                 @endif
 
                 @if(session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: '{{ session('error') }}',
-                    confirmButtonText: 'OK'
-                });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'OK'
+                    });
                 @endif
-            });
+                            });
         </script>
     @endif
 @endsection

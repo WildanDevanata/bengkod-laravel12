@@ -1,18 +1,63 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('admin.obat') }}" class="nav-link"> <i
-                    class="nav-icon fas fa-th"></i> Obat</a></li>
-        <li class="nav-item"><a href="{{ route('admin.dokter') }}" class="nav-link active"><i
-                    class="nav-icon fas fa-user-md"></i> Dokter</a></li>
-        <li class="nav-item"><a href="{{ route('admin.pasien') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-injured"></i> Pasien</a></li>
-        <li class="nav-item"><a href="{{ route('admin.poliMaster') }}" class="nav-link"><i
-                    class="nav-icon fas fa-hospital"></i> Poli</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.obat') }}" class="nav-link">
+                <i class="nav-icon fas fa-pills"></i>
+                <p>
+                    Obat
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.dokter') }}" class="nav-link">
+                <i class="nav-icon fas fa-user-md"></i>
+                <p>
+                    Dokter
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.pasien') }}" class="nav-link">
+                <i class="nav-icon fas fa-procedures"></i>
+                <p>
+                    Pasien
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.poliMaster') }}" class="nav-link">
+                <i class="nav-icon fas fa-hospital"></i>
+                <p>
+                    Poli
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('content')
@@ -46,55 +91,58 @@
                         <div class="table-responsive">
                             <table id="dokterTable" class="table table-bordered table-striped">
                                 <thead>
-                                <tr>
-                                    <th width="5%">#</th>
-                                    <th width="20%">No KTP</th>
-                                    <th width="20%">Nama</th>
-                                    <th width="20%">Email</th>
-                                    <th width="12%">No HP</th>
-                                    <th width="20%">Alamat</th>
-                                    <th width="13%">Poli</th>
-                                    <th width="10%">Aksi</th>
-                                </tr>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th width="20%">No KTP</th>
+                                        <th width="20%">Nama</th>
+                                        <th width="20%">Email</th>
+                                        <th width="12%">No HP</th>
+                                        <th width="20%">Alamat</th>
+                                        <th width="13%">Poli</th>
+                                        <th width="10%">Aksi</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($users as $index => $dokter)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $dokter->no_ktp }}</td>
-                                        <td><strong>{{ $dokter->name }}</strong></td>
-                                        <td>{{ $dokter->email }}</td>
-                                        <td>{{ $dokter->no_hp ?? '-' }}</td>
-                                        <td>{{ $dokter->alamat ?? '-' }}</td>
-                                        <td>
-                                            @if($dokter->poli)
-                                                <span class="badge badge-info">{{ $dokter->poli->nama_poli }}</span>
-                                            @else
-                                                <span class="badge badge-secondary">Belum Ditentukan</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ url('/admin/dokter/edit/' . $dokter->id) }}" class="btn btn-sm btn-warning" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="{{ url('/admin/dokter/delete/' . $dokter->id) }}" class="btn btn-sm btn-danger"
-                                                   onclick="return confirm('Apakah Anda yakin ingin menghapus dokter {{ $dokter->name }}?')" title="Hapus">
-                                                    <i class="fas fa-trash"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center">
-                                            <div class="py-4">
-                                                <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
-                                                <p class="text-muted">Belum ada data dokter</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
+                                    @forelse($users as $index => $dokter)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $dokter->no_ktp }}</td>
+                                            <td><strong>{{ $dokter->name }}</strong></td>
+                                            <td>{{ $dokter->email }}</td>
+                                            <td>{{ $dokter->no_hp ?? '-' }}</td>
+                                            <td>{{ $dokter->alamat ?? '-' }}</td>
+                                            <td>
+                                                @if($dokter->poli)
+                                                    <span class="badge badge-info">{{ $dokter->poli->nama_poli }}</span>
+                                                @else
+                                                    <span class="badge badge-secondary">Belum Ditentukan</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ url('/admin/dokter/edit/' . $dokter->id) }}"
+                                                        class="btn btn-sm btn-warning" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{{ url('/admin/dokter/delete/' . $dokter->id) }}"
+                                                        class="btn btn-sm btn-danger"
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus dokter {{ $dokter->name }}?')"
+                                                        title="Hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                <div class="py-4">
+                                                    <i class="fas fa-user-md fa-3x text-muted mb-3"></i>
+                                                    <p class="text-muted">Belum ada data dokter</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
@@ -122,32 +170,31 @@
                                 <div class="form-group">
                                     <label for="no_ktp">NIK <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('no_ktp') is-invalid @enderror"
-                                           id="no_ktp" name="no_ktp" value="{{ old('no_ktp') }}"
-                                           placeholder="Masukkan nama lengkap dokter" required>
+                                        id="no_ktp" name="no_ktp" value="{{ old('no_ktp') }}"
+                                        placeholder="Masukkan nama lengkap dokter" required>
                                     @error('no_ktp')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name">Nama Dokter <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                           id="name" name="name" value="{{ old('name') }}"
-                                           placeholder="Masukkan nama lengkap dokter" required>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                                        name="name" value="{{ old('name') }}" placeholder="Masukkan nama lengkap dokter"
+                                        required>
                                     @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="email">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                           id="email" name="email" value="{{ old('email') }}"
-                                           placeholder="dokter@example.com" required>
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                                        name="email" value="{{ old('email') }}" placeholder="dokter@example.com" required>
                                     @error('email')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -158,17 +205,18 @@
                                 <div class="form-group">
                                     <label for="password">Password <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                           id="password" name="password" placeholder="Minimal 8 karakter" required>
+                                        id="password" name="password" placeholder="Minimal 8 karakter" required>
                                     @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="password_confirmation">Konfirmasi Password <span class="text-danger">*</span></label>
+                                    <label for="password_confirmation">Konfirmasi Password <span
+                                            class="text-danger">*</span></label>
                                     <input type="password" class="form-control" id="password_confirmation"
-                                           name="password_confirmation" placeholder="Ulangi password" required>
+                                        name="password_confirmation" placeholder="Ulangi password" required>
                                 </div>
                             </div>
                         </div>
@@ -177,18 +225,18 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="no_hp">No. HP</label>
-                                    <input type="text" class="form-control @error('no_hp') is-invalid @enderror"
-                                           id="no_hp" name="no_hp" value="{{ old('no_hp') }}"
-                                           placeholder="08xxxxxxxxxx">
+                                    <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp"
+                                        name="no_hp" value="{{ old('no_hp') }}" placeholder="08xxxxxxxxxx">
                                     @error('no_hp')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="poli_id">Poli <span class="text-danger">*</span></label>
-                                    <select class="form-control @error('poli_id') is-invalid @enderror" id="poli_id" name="poli_id" required>
+                                    <select class="form-control @error('poli_id') is-invalid @enderror" id="poli_id"
+                                        name="poli_id" required>
                                         <option value="">-- Pilih Poli --</option>
                                         @foreach($polis ?? [] as $poli)
                                             <option value="{{ $poli->id }}" {{ old('poli_id') == $poli->id ? 'selected' : '' }}>
@@ -197,7 +245,7 @@
                                         @endforeach
                                     </select>
                                     @error('poli_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -205,11 +253,10 @@
 
                         <div class="form-group">
                             <label for="alamat">Alamat</label>
-                            <textarea class="form-control @error('alamat') is-invalid @enderror"
-                                      id="alamat" name="alamat" rows="3"
-                                      placeholder="Masukkan alamat lengkap">{{ old('alamat') }}</textarea>
+                            <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat"
+                                rows="3" placeholder="Masukkan alamat lengkap">{{ old('alamat') }}</textarea>
                             @error('alamat')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -248,16 +295,16 @@
 
             // Show modal if there are validation errors
             @if($errors->any())
-            $('#addDokterModal').modal('show');
+                $('#addDokterModal').modal('show');
             @endif
 
             // Auto hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 5000);
 
             // Password confirmation validation
-            $('#password_confirmation').on('keyup', function() {
+            $('#password_confirmation').on('keyup', function () {
                 var password = $('#password').val();
                 var confirmPassword = $(this).val();
 

@@ -1,18 +1,63 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('admin.obat') }}" class="nav-link"> <i
-                    class="nav-icon fas fa-th"></i>Obat</a></li>
-        <li class="nav-item"><a href="{{ route('admin.dokter') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-md"></i> Dokter</a></li>
-        <li class="nav-item"><a href="{{ route('admin.pasien') }}" class="nav-link active"><i
-                    class="nav-icon fas fa-user-injured"></i> Pasien</a></li>
-        <li class="nav-item"><a href="{{ route('admin.poliMaster') }}" class="nav-link"><i
-                    class="nav-icon fas fa-hospital"></i> Poli</a></li>
-    </ul>
+<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+    <li class="nav-item">
+        <a href="{{ route('admin.dashboard') }}" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+                Dashboard
+                <span class="right badge bg-success">Admin</span>
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('admin.obat') }}" class="nav-link">
+            <i class="nav-icon fas fa-pills"></i>
+            <p>
+                Obat
+                <span class="right badge bg-success">Admin</span>
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('admin.dokter') }}" class="nav-link">
+            <i class="nav-icon fas fa-user-md"></i>
+            <p>
+                Dokter
+                <span class="right badge bg-success">Admin</span>
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('admin.pasien') }}" class="nav-link">
+            <i class="nav-icon fas fa-procedures"></i>
+            <p>
+                Pasien
+                <span class="right badge bg-success">Admin</span>
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('admin.poliMaster') }}" class="nav-link">
+            <i class="nav-icon fas fa-hospital"></i>
+            <p>
+                Poli
+                <span class="right badge bg-success">Admin</span>
+            </p>
+        </a>
+    </li>
+</ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('content')

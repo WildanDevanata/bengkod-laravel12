@@ -1,16 +1,54 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('dokter.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.periksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-stethoscope"></i> Memeriksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-calendar-alt"></i> Jadwal Periksa</a></li>
-        <li class="nav-item"><a href="{{ route('dokter.historyPeriksa') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> historyPeriksa</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('dokter.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.periksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-stethoscope"></i>
+                <p>
+                    Memeriksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>
+                    Jadwal Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    History Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('content')
@@ -66,10 +104,10 @@
                                         <div class="form-group">
                                             <label for="no_ktp">No KTP <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('no_ktp') is-invalid @enderror"
-                                                   id="no_ktp" name="no_ktp" value="{{ old('no_ktp', $user->no_ktp) }}"
-                                                   placeholder="Masukkan nomor KTP" required>
+                                                id="no_ktp" name="no_ktp" value="{{ old('no_ktp', $user->no_ktp) }}"
+                                                placeholder="Masukkan nomor KTP" required>
                                             @error('no_ktp')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
@@ -77,10 +115,10 @@
                                         <div class="form-group">
                                             <label for="name">Nama Lengkap <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                                   id="name" name="name" value="{{ old('name', $user->name) }}"
-                                                   placeholder="Masukkan nama lengkap" required>
+                                                id="name" name="name" value="{{ old('name', $user->name) }}"
+                                                placeholder="Masukkan nama lengkap" required>
                                             @error('name')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
@@ -91,10 +129,10 @@
                                         <div class="form-group">
                                             <label for="email">Email <span class="text-danger">*</span></label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                                   id="email" name="email" value="{{ old('email', $user->email) }}"
-                                                   placeholder="dokter@example.com" required>
+                                                id="email" name="email" value="{{ old('email', $user->email) }}"
+                                                placeholder="dokter@example.com" required>
                                             @error('email')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
@@ -102,10 +140,10 @@
                                         <div class="form-group">
                                             <label for="no_hp">No. HP</label>
                                             <input type="text" class="form-control @error('no_hp') is-invalid @enderror"
-                                                   id="no_hp" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}"
-                                                   placeholder="08xxxxxxxxxx">
+                                                id="no_hp" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}"
+                                                placeholder="08xxxxxxxxxx">
                                             @error('no_hp')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
@@ -113,11 +151,11 @@
 
                                 <div class="form-group">
                                     <label for="alamat">Alamat</label>
-                                    <textarea class="form-control @error('alamat') is-invalid @enderror"
-                                              id="alamat" name="alamat" rows="3"
-                                              placeholder="Masukkan alamat lengkap">{{ old('alamat', $user->alamat) }}</textarea>
+                                    <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat"
+                                        name="alamat" rows="3"
+                                        placeholder="Masukkan alamat lengkap">{{ old('alamat', $user->alamat) }}</textarea>
                                     @error('alamat')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
@@ -127,12 +165,14 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="current_password">Password Saat Ini</label>
-                                            <input type="password" class="form-control @error('current_password') is-invalid @enderror"
-                                                   id="current_password" name="current_password"
-                                                   placeholder="Masukkan password saat ini">
-                                            <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah password</small>
+                                            <input type="password"
+                                                class="form-control @error('current_password') is-invalid @enderror"
+                                                id="current_password" name="current_password"
+                                                placeholder="Masukkan password saat ini">
+                                            <small class="form-text text-muted">Kosongkan jika tidak ingin mengubah
+                                                password</small>
                                             @error('current_password')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
@@ -142,10 +182,11 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="password">Password Baru</label>
-                                            <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                                   id="password" name="password" placeholder="Masukkan password baru">
+                                            <input type="password"
+                                                class="form-control @error('password') is-invalid @enderror" id="password"
+                                                name="password" placeholder="Masukkan password baru">
                                             @error('password')
-                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                     </div>
@@ -153,7 +194,7 @@
                                         <div class="form-group">
                                             <label for="password_confirmation">Konfirmasi Password Baru</label>
                                             <input type="password" class="form-control" id="password_confirmation"
-                                                   name="password_confirmation" placeholder="Ulangi password baru">
+                                                name="password_confirmation" placeholder="Ulangi password baru">
                                         </div>
                                     </div>
                                 </div>
@@ -188,7 +229,8 @@
                             <h5 class="widget-user-desc">Dokter {{ $user->poli->nama_poli ?? '' }}</h5>
                         </div>
                         <div class="widget-user-image">
-                            <img class="img-circle elevation-2" src="{{ asset('lte/dist/img/user1-128x128.jpg') }}" alt="User Avatar">
+                            <img class="img-circle elevation-2" src="{{ asset('lte/dist/img/user1-128x128.jpg') }}"
+                                alt="User Avatar">
                         </div>
                         <div class="card-footer">
                             <div class="row">
@@ -230,8 +272,10 @@
                                         <strong>Email:</strong> {{ $user->email }}<br>
                                         <strong>No. HP:</strong> {{ $user->no_hp ?? 'Belum diisi' }}<br>
                                         <strong>Poli:</strong> {{ $user->poli->nama_poli ?? 'Belum ditentukan' }}<br>
-                                        <strong>Bergabung:</strong> {{ $user->created_at ? $user->created_at->format('d F Y') : '-' }}<br>
-                                        <strong>Update Terakhir:</strong> {{ $user->updated_at ? $user->updated_at->format('d F Y, H:i') : '-' }}
+                                        <strong>Bergabung:</strong>
+                                        {{ $user->created_at ? $user->created_at->format('d F Y') : '-' }}<br>
+                                        <strong>Update Terakhir:</strong>
+                                        {{ $user->updated_at ? $user->updated_at->format('d F Y, H:i') : '-' }}
                                     </p>
                                 </div>
                             </div>
@@ -270,14 +314,14 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Auto hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 5000);
 
             // Password confirmation validation
-            $('#password_confirmation').on('keyup', function() {
+            $('#password_confirmation').on('keyup', function () {
                 var password = $('#password').val();
                 var confirmPassword = $(this).val();
 
@@ -293,7 +337,7 @@
             });
 
             // Show/hide password fields based on current password
-            $('#current_password').on('input', function() {
+            $('#current_password').on('input', function () {
                 var currentPassword = $(this).val();
                 if (currentPassword !== '') {
                     $('#password, #password_confirmation').prop('required', true);
@@ -307,7 +351,7 @@
             });
 
             // Form validation before submit
-            $('form').on('submit', function(e) {
+            $('form').on('submit', function (e) {
                 var currentPassword = $('#current_password').val();
                 var password = $('#password').val();
                 var confirmPassword = $('#password_confirmation').val();
@@ -347,26 +391,26 @@
     <!-- SweetAlert2 for better alerts -->
     @if(session('success') || session('error'))
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 @if(session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: '{{ session('success') }}',
-                    timer: 3000,
-                    showConfirmButton: false
-                });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ session('success') }}',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
                 @endif
 
                 @if(session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: '{{ session('error') }}',
-                    confirmButtonText: 'OK'
-                });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: '{{ session('error') }}',
+                        confirmButtonText: 'OK'
+                    });
                 @endif
-            });
+                    });
         </script>
     @endif
 @endsection

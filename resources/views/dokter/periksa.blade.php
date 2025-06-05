@@ -1,32 +1,54 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
         <li class="nav-item">
             <a href="{{ route('dokter.dashboard') }}" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>Dashboard</p>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('dokter.periksa') }}" class="nav-link active">
+            <a href="{{ route('dokter.periksa') }}" class="nav-link">
                 <i class="nav-icon fas fa-stethoscope"></i>
-                <p>Memeriksa</p>
+                <p>
+                    Memeriksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
                 <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>Jadwal Periksa</p>
+                <p>
+                    Jadwal Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link">
-                <i class="nav-icon fas fa-history"></i>
-                <p>History Periksa</p>
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    History Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('title', 'Daftar Pasien Belum Diperiksa')
@@ -84,105 +106,111 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped" id="periksaTable">
                                     <thead class="thead-dark">
-                                    <tr>
-                                        <th width="5%">No</th>
-                                        <th width="15%">Nama Pasien</th>
-                                        <th width="15%">Jadwal Periksa</th>
-                                        <th width="20%">Keluhan</th>
-                                        <th width="15%">Status & Antrian</th>
-                                        <th width="15%">Dokter</th>
-                                        <th width="15%">Aksi</th>
-                                    </tr>
+                                        <tr>
+                                            <th width="5%">No</th>
+                                            <th width="15%">Nama Pasien</th>
+                                            <th width="15%">Jadwal Periksa</th>
+                                            <th width="20%">Keluhan</th>
+                                            <th width="15%">Status & Antrian</th>
+                                            <th width="15%">Dokter</th>
+                                            <th width="15%">Aksi</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($periksas as $index => $janjiPeriksa)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <i class="fas fa-user-injured text-primary mr-2"></i>
-                                                    <strong>{{ $janjiPeriksa->pasien->name ?? 'N/A' }}</strong>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <i class="fas fa-calendar-alt text-info mr-1"></i>
-                                                <strong>{{ ucfirst($janjiPeriksa->jadwalPeriksa->hari) }}</strong>
-                                                <br>
-                                                <small class="text-muted">
-                                                    <i class="fas fa-clock mr-1"></i>
-                                                    {{ $janjiPeriksa->jadwalPeriksa->jam_mulai }} - {{ $janjiPeriksa->jadwalPeriksa->jam_selesai }}
-                                                </small>
-                                            </td>
-                                            <td>
-                                                @if($janjiPeriksa->keluhan)
-                                                    <span class="text-muted">{{ Str::limit($janjiPeriksa->keluhan, 50) }}</span>
-                                                @else
-                                                    <span class="text-muted font-italic">Belum ada keluhan</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-warning">
-                                                    <i class="fas fa-clock mr-1"></i>
-                                                    Menunggu Pemeriksaan
-                                                </span>
-                                                <br>
-                                                <small class="text-muted">No. Antrian: {{ $janjiPeriksa->no_antrian }}</small>
-                                            </td>
-                                            <td>
-                                                <i class="fas fa-user-md text-success mr-1"></i>
-                                                {{ $janjiPeriksa->jadwalPeriksa->dokter->name ?? 'N/A' }}
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{{ route('dokter.periksa_edit', $janjiPeriksa->id) }}"
-                                                       class="btn btn-primary btn-sm"
-                                                       title="Periksa Pasien">
-                                                        <i class="fas fa-stethoscope"></i> Periksa
-                                                    </a>
+                                        @foreach($periksas as $index => $janjiPeriksa)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-user-injured text-primary mr-2"></i>
+                                                        <strong>{{ $janjiPeriksa->pasien->name ?? 'N/A' }}</strong>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i class="fas fa-calendar-alt text-info mr-1"></i>
+                                                    <strong>{{ ucfirst($janjiPeriksa->jadwalPeriksa->hari) }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-clock mr-1"></i>
+                                                        {{ $janjiPeriksa->jadwalPeriksa->jam_mulai }} -
+                                                        {{ $janjiPeriksa->jadwalPeriksa->jam_selesai }}
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    @if($janjiPeriksa->keluhan)
+                                                        <span class="text-muted">{{ Str::limit($janjiPeriksa->keluhan, 50) }}</span>
+                                                    @else
+                                                        <span class="text-muted font-italic">Belum ada keluhan</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="badge badge-warning">
+                                                        <i class="fas fa-clock mr-1"></i>
+                                                        Menunggu Pemeriksaan
+                                                    </span>
+                                                    <br>
+                                                    <small class="text-muted">No. Antrian: {{ $janjiPeriksa->no_antrian }}</small>
+                                                </td>
+                                                <td>
+                                                    <i class="fas fa-user-md text-success mr-1"></i>
+                                                    {{ $janjiPeriksa->jadwalPeriksa->dokter->name ?? 'N/A' }}
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a href="{{ route('dokter.periksa_edit', $janjiPeriksa->id) }}"
+                                                            class="btn btn-primary btn-sm" title="Periksa Pasien">
+                                                            <i class="fas fa-stethoscope"></i> Periksa
+                                                        </a>
 
-                                                    <button type="button"
-                                                            class="btn btn-danger btn-sm"
-                                                            data-toggle="modal"
+                                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
                                                             data-target="#deleteModal{{ $janjiPeriksa->id }}"
                                                             title="Tolak Pemeriksaan">
-                                                        <i class="fas fa-times"></i> Tolak
-                                                    </button>
-                                                </div>
+                                                            <i class="fas fa-times"></i> Tolak
+                                                        </button>
+                                                    </div>
 
-                                                <!-- Delete Modal -->
-                                                <div class="modal fade" id="deleteModal{{ $janjiPeriksa->id }}" tabindex="-1" role="dialog">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header bg-danger text-white">
-                                                                <h5 class="modal-title">
-                                                                    <i class="fas fa-exclamation-triangle"></i> Konfirmasi Penolakan
-                                                                </h5>
-                                                                <button type="button" class="close text-white" data-dismiss="modal">
-                                                                    <span>&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p>Apakah Anda yakin ingin menolak pemeriksaan untuk pasien <strong>{{ $janjiPeriksa->pasien->name ?? 'N/A' }}</strong>?</p>
-                                                                <p class="text-muted">Tindakan ini tidak dapat dibatalkan.</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                                    <i class="fas fa-times"></i> Batal
-                                                                </button>
-                                                                <form action="{{ route('dokter.tolakPeriksa', $janjiPeriksa->id) }}" method="POST" style="display: inline;">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger">
-                                                                        <i class="fas fa-trash"></i> Ya, Tolak
+                                                    <!-- Delete Modal -->
+                                                    <div class="modal fade" id="deleteModal{{ $janjiPeriksa->id }}" tabindex="-1"
+                                                        role="dialog">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header bg-danger text-white">
+                                                                    <h5 class="modal-title">
+                                                                        <i class="fas fa-exclamation-triangle"></i> Konfirmasi
+                                                                        Penolakan
+                                                                    </h5>
+                                                                    <button type="button" class="close text-white"
+                                                                        data-dismiss="modal">
+                                                                        <span>&times;</span>
                                                                     </button>
-                                                                </form>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>Apakah Anda yakin ingin menolak pemeriksaan untuk pasien
+                                                                        <strong>{{ $janjiPeriksa->pasien->name ?? 'N/A' }}</strong>?
+                                                                    </p>
+                                                                    <p class="text-muted">Tindakan ini tidak dapat dibatalkan.</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-dismiss="modal">
+                                                                        <i class="fas fa-times"></i> Batal
+                                                                    </button>
+                                                                    <form
+                                                                        action="{{ route('dokter.tolakPeriksa', $janjiPeriksa->id) }}"
+                                                                        method="POST" style="display: inline;">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="btn btn-danger">
+                                                                            <i class="fas fa-trash"></i> Ya, Tolak
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -207,13 +235,13 @@
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#periksaTable').DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
                 "pageLength": 10,
-                "order": [[ 2, "desc" ]], // Sort by date descending
+                "order": [[2, "desc"]], // Sort by date descending
                 "language": {
                     "search": "Cari:",
                     "lengthMenu": "Tampilkan _MENU_ data per halaman",
@@ -231,7 +259,7 @@
             });
 
             // Auto hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 5000);
         });

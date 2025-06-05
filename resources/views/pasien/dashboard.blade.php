@@ -1,15 +1,47 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('pasien.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('pasien.janjiPeriksa') }}" class="nav-link"> <i
-                    class="nav-icon fas fa-th"></i>
-                JanjiPeriksa</a></li>
-        <li class="nav-item"><a href="{{ route('pasien.riwayat') }}" class="nav-link"><i
-                    class="nav-icon fas fa-book"></i> Riwayat Periksa</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('pasien.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-primary">Pasien</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('pasien.janjiPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    Janji Periksa
+                    <span class="right badge bg-primary">Pasien</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('pasien.riwayat') }}" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Riwayat Periksa
+                    <span class="right badge bg-primary">Pasien</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
+
 @endsection
 
 
@@ -47,5 +79,3 @@
         <p>Welcome, {{ Auth::user()->name }}!</p>
     @endif
 @endsection
-
-

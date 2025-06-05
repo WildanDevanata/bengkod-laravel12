@@ -1,18 +1,63 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
-        <li class="nav-item"><a href="{{ route('admin.dashboard') }}" class="nav-link"><i
-                    class="nav-icon fas fa-tachometer-alt"></i> Dashboard</a></li>
-        <li class="nav-item"><a href="{{ route('admin.obat') }}" class="nav-link"> <i
-                    class="nav-icon fas fa-th"></i> Obat</a></li>
-        <li class="nav-item"><a href="{{ route('admin.dokter') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-md"></i> Dokter</a></li>
-        <li class="nav-item"><a href="{{ route('admin.pasien') }}" class="nav-link"><i
-                    class="nav-icon fas fa-user-injured"></i> Pasien</a></li>
-        <li class="nav-item"><a href="{{ route('admin.poliMaster') }}" class="nav-link active"><i
-                    class="nav-icon fas fa-hospital"></i> Poli</a></li>
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.obat') }}" class="nav-link">
+                <i class="nav-icon fas fa-pills"></i>
+                <p>
+                    Obat
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.dokter') }}" class="nav-link">
+                <i class="nav-icon fas fa-user-md"></i>
+                <p>
+                    Dokter
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.pasien') }}" class="nav-link">
+                <i class="nav-icon fas fa-procedures"></i>
+                <p>
+                    Pasien
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.poliMaster') }}" class="nav-link">
+                <i class="nav-icon fas fa-hospital"></i>
+                <p>
+                    Poli
+                    <span class="right badge bg-success">Admin</span>
+                </p>
+            </a>
+        </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('content')
@@ -64,10 +109,10 @@
                                 <div class="form-group">
                                     <label for="nama_poli">Nama Poli</label>
                                     <input type="text" class="form-control @error('nama_poli') is-invalid @enderror"
-                                           id="nama_poli" name="nama_poli" value="{{ old('nama_poli') }}"
-                                           placeholder="Masukkan nama poli" required>
+                                        id="nama_poli" name="nama_poli" value="{{ old('nama_poli') }}"
+                                        placeholder="Masukkan nama poli" required>
                                     @error('nama_poli')
-                                    <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -76,11 +121,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="keterangan">Keterangan</label>
-                                    <textarea class="form-control @error('keterangan') is-invalid @enderror"
-                                              id="keterangan" name="keterangan" rows="3"
-                                              placeholder="Masukkan keterangan (opsional)">{{ old('keterangan') }}</textarea>
+                                    <textarea class="form-control @error('keterangan') is-invalid @enderror" id="keterangan"
+                                        name="keterangan" rows="3"
+                                        placeholder="Masukkan keterangan (opsional)">{{ old('keterangan') }}</textarea>
                                     @error('keterangan')
-                                    <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -108,54 +153,54 @@
                     <div class="table-responsive">
                         <table id="poliTable" class="table table-bordered table-striped">
                             <thead>
-                            <tr>
-                                <th width="5%">No</th>
-                                <th width="25%">Nama Poli</th>
-                                <th width="40%">Keterangan</th>
-                                <th width="15%">Tanggal Dibuat</th>
-                                <th width="15%">Aksi</th>
-                            </tr>
+                                <tr>
+                                    <th width="5%">No</th>
+                                    <th width="25%">Nama Poli</th>
+                                    <th width="40%">Keterangan</th>
+                                    <th width="15%">Tanggal Dibuat</th>
+                                    <th width="15%">Aksi</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @forelse($poli as $index => $item)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>
-                                        <strong>{{ $item->nama_poli }}</strong>
-                                    </td>
-                                    <td>
-                                        {{ $item->keterangan ?? '-' }}
-                                    </td>
-                                    <td>
-                                        <small class="text-muted">
-                                            {{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}
-                                        </small>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{{ route('admin.editPoli', $item->id) }}"
-                                               class="btn btn-sm btn-warning" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="{{ route('admin.deletePoli', $item->id) }}"
-                                               class="btn btn-sm btn-danger"
-                                               onclick="return confirm('Apakah Anda yakin ingin menghapus poli {{ $item->nama_poli }}?')"
-                                               title="Hapus">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="text-center">
-                                        <div class="py-4">
-                                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                            <p class="text-muted">Belum ada data poli</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
+                                @forelse($poli as $index => $item)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <strong>{{ $item->nama_poli }}</strong>
+                                        </td>
+                                        <td>
+                                            {{ $item->keterangan ?? '-' }}
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                {{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ route('admin.editPoli', $item->id) }}"
+                                                    class="btn btn-sm btn-warning" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{{ route('admin.deletePoli', $item->id) }}"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus poli {{ $item->nama_poli }}?')"
+                                                    title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <div class="py-4">
+                                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                                <p class="text-muted">Belum ada data poli</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -183,7 +228,7 @@
             }).buttons().container().appendTo('#poliTable_wrapper .col-md-6:eq(0)');
 
             // Auto hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 5000);
         });

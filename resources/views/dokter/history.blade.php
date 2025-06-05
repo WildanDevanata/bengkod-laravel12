@@ -1,32 +1,54 @@
 @extends('components.layout')
 
 @section('nav-content')
-    <ul class="nav">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
         <li class="nav-item">
             <a href="{{ route('dokter.dashboard') }}" class="nav-link">
                 <i class="nav-icon fas fa-tachometer-alt"></i>
-                <p>Dashboard</p>
+                <p>
+                    Dashboard
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('dokter.periksa') }}" class="nav-link">
-                <i class="nav-icon fas fa-user-md"></i>
-                <p>Memeriksa</p>
+                <i class="nav-icon fas fa-stethoscope"></i>
+                <p>
+                    Memeriksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
         <li class="nav-item">
             <a href="{{ route('dokter.jadwalPeriksa') }}" class="nav-link">
                 <i class="nav-icon fas fa-calendar-alt"></i>
-                <p>Jadwal Periksa</p>
+                <p>
+                    Jadwal Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link active">
-                <i class="nav-icon fas fa-history"></i>
-                <p>History Periksa</p>
+            <a href="{{ route('dokter.historyPeriksa') }}" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    History Periksa
+                    <span class="right badge bg-info">Dokter</span>
+                </p>
             </a>
         </li>
     </ul>
+
+    <!-- Brand Logo or Logout Section -->
+    <div class="d-flex justify-content-center mt-4">
+        <form action="{{ route('logout') }}" method="POST" class="w-75 text-center">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-medium btn-block">
+                Logout
+            </button>
+        </form>
+    </div>
 @endsection
 
 @section('content')
@@ -62,61 +84,61 @@
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
                                         <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Pasien</th>
-                                            <th>Tanggal Periksa</th>
-                                            <th>Keluhan</th>
-                                            <th>Catatan Dokter</th>
-                                            <th>Obat</th>
-                                            <th>BiayaTotal</th>
-                                        </tr>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Nama Pasien</th>
+                                                <th>Tanggal Periksa</th>
+                                                <th>Keluhan</th>
+                                                <th>Catatan Dokter</th>
+                                                <th>Obat</th>
+                                                <th>BiayaTotal</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($periksas as $index => $periksa)
-                                            <tr>
-                                                <td>{{ $index + 1 }}</td>
-                                                <td>
-                                                    <strong>{{ $periksa->pasien->name }}</strong>
-                                                </td>
-                                                <td>
+                                            @foreach($periksas as $index => $periksa)
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>
+                                                        <strong>{{ $periksa->pasien->name }}</strong>
+                                                    </td>
+                                                    <td>
                                                         <span class="badge badge-info">
                                                             {{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d/m/Y H:i') }}
                                                         </span>
-                                                </td>
-                                                <td>
-                                                    {{ $periksa->janjiPeriksa->keluhan ?? '-' }}
-                                                </td>
-                                                <td>
-                                                    {{ $periksa->catatan ?? '-' }}
-                                                </td>
-                                                <td>
-                                                    @if($periksa->obat->count() > 0)
-                                                        <ul class="list-unstyled mb-0">
-                                                            @foreach($periksa->obat as $obat)
-                                                                <li class="mb-1">
-                                                                    <div class="d-flex justify-content-between align-items-center">
+                                                    </td>
+                                                    <td>
+                                                        {{ $periksa->janjiPeriksa->keluhan ?? '-' }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $periksa->catatan ?? '-' }}
+                                                    </td>
+                                                    <td>
+                                                        @if($periksa->obat->count() > 0)
+                                                            <ul class="list-unstyled mb-0">
+                                                                @foreach($periksa->obat as $obat)
+                                                                    <li class="mb-1">
+                                                                        <div class="d-flex justify-content-between align-items-center">
                                                                             <span class="badge badge-secondary">
                                                                                 {{ $obat->nama_obat }} ({{ $obat->kemasan }})
                                                                             </span>
-                                                                        <small class="text-success font-weight-bold">
-                                                                            Rp {{ number_format($obat->harga, 0, ',', '.') }}
-                                                                        </small>
-                                                                    </div>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @else
-                                                        <span class="text-muted">-</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <strong class="text-success">
-                                                        Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}
-                                                    </strong>
-                                                </td>
-                                            </tr>
-                                        @endforeach
+                                                                            <small class="text-success font-weight-bold">
+                                                                                Rp {{ number_format($obat->harga, 0, ',', '.') }}
+                                                                            </small>
+                                                                        </div>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @else
+                                                            <span class="text-muted">-</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <strong class="text-success">
+                                                            Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -124,7 +146,8 @@
                                 <div class="text-center py-4">
                                     <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
                                     <h5 class="text-muted">Belum ada riwayat pemeriksaan</h5>
-                                    <p class="text-muted">Data pemeriksaan akan muncul setelah Anda melakukan pemeriksaan pasien.</p>
+                                    <p class="text-muted">Data pemeriksaan akan muncul setelah Anda melakukan pemeriksaan
+                                        pasien.</p>
                                 </div>
                             @endif
                         </div>
@@ -144,7 +167,7 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Initialize DataTable if you want to add search/sort functionality
             // $('.table').DataTable({
             //     "responsive": true,
@@ -154,4 +177,3 @@
         });
     </script>
 @endpush
-
