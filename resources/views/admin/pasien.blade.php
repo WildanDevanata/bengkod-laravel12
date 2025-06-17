@@ -66,7 +66,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Pasien Master</h3>
+                        <h3 class="card-title">Pasien</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPasienModal">
                                 <i class="fas fa-plus"></i> Tambah Pasien

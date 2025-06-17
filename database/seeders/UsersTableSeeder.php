@@ -71,8 +71,8 @@ class UsersTableSeeder extends Seeder
     {
         $users = [
             [
-                'name' => 'Super Admin',
-                'email' => 'superadmin@gmail.com',
+                'name' => 'Admin',
+                'email' => 'admin@gmail.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'alamat' => 'Jl. Kebon Jeruk No. 1, Jakarta',
@@ -87,7 +87,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Dr. John Doe',
-                'email' => 'doctor1@example.com',
+                'email' => 'dokter1@example.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'alamat' => 'Jl. Kebon Jeruk No. 2, Jakarta',
@@ -102,7 +102,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Jane Doe',
-                'email' => 'patient1@example.com',
+                'email' => 'pasien1@example.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'alamat' => 'Jl. Raya No. 10, Jakarta',
@@ -117,7 +117,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Dr. Sarah Johnson',
-                'email' => 'doctor2@example.com',
+                'email' => 'dokter2@example.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'alamat' => 'Jl. Sutan Syahrir No. 2, Bandung',
@@ -132,7 +132,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Michael Smith',
-                'email' => 'patient2@example.com',
+                'email' => 'pasien2@example.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'alamat' => 'Jl. Merdeka No. 15, Surabaya',
@@ -147,7 +147,7 @@ class UsersTableSeeder extends Seeder
             ],
             [
                 'name' => 'Dr. William Brown',
-                'email' => 'doctor3@example.com',
+                'email' => 'dokter3@example.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password123'),
                 'alamat' => 'Jl. Pahlawan No. 5, Yogyakarta',

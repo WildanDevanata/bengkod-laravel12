@@ -287,7 +287,7 @@
                 <h4 class="text-muted">Belum Ada Riwayat Pemeriksaan</h4>
                 <p class="text-muted">Anda belum memiliki riwayat pemeriksaan. Silakan buat janji periksa terlebih dahulu.
                 </p>
-                <a href="{{ route('pasien.showJanjiPeriksaForm') }}" class="btn btn-primary">
+                <a href="{{ route('pasien.janjiPeriksa') }}" class="btn btn-primary">
                     <i class="fas fa-calendar-plus mr-1"></i>
                     Buat Janji Periksa
                 </a>

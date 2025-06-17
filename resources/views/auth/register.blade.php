@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -69,11 +68,22 @@
             </div>
 
             <div class="mb-3">
-                <label for="no_hp" class="form-label">no_hp</label>
-                <input type="no_hp" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp" name="no_hp"
+                <label for="no_ktp" class="form-label">No. KTP</label>
+                <input type="text" class="form-control @error('no_ktp') is-invalid @enderror" id="no_ktp" name="no_ktp"
+                       value="{{ old('no_ktp') }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="no_hp" class="form-label">No. HP</label>
+                <input type="text" class="form-control @error('no_hp') is-invalid @enderror" id="no_hp" name="no_hp"
                        value="{{ old('no_hp') }}" required>
             </div>
 
+            <div class="mb-3">
+                <label for="alamat" class="form-label">Alamat</label>
+                <input type="text" class="form-control @error('alamat') is-invalid @enderror" id="alamat"
+                       name="alamat" value="{{ old('alamat') }}" required>
+            </div>
 
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
@@ -95,13 +105,6 @@
                 </select>
             </div>
 
-            <div class="mb-3">
-                <label for="alamat" class="form-label">Alamat</label>
-                <input type="alamat" class="form-control @error('alamat') is-invalid @enderror" id="alamat"
-                       name="alamat" required>
-            </div>
-
-
             <button type="submit" class="btn btn-primary btn-register">Register</button>
         </form>
 
@@ -110,8 +113,6 @@
         </div>
     </div>
 </div>
-
-<!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
