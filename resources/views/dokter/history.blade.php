@@ -70,99 +70,110 @@
     </div>
 
     <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Riwayat Pemeriksaan Pasien</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            @if($periksas->count() > 0)
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Nama Pasien</th>
-                                                <th>Tanggal Periksa</th>
-                                                <th>Keluhan</th>
-                                                <th>Catatan Dokter</th>
-                                                <th>Obat</th>
-                                                <th>BiayaTotal</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($periksas as $index => $periksa)
-                                                <tr>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td>
-                                                        <strong>{{ $periksa->pasien->name }}</strong>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge badge-info">
-                                                            {{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d/m/Y H:i') }}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        {{ $periksa->janjiPeriksa->keluhan ?? '-' }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $periksa->catatan ?? '-' }}
-                                                    </td>
-                                                    <td>
-                                                        @if($periksa->obat->count() > 0)
-                                                            <ul class="list-unstyled mb-0">
-                                                                @foreach($periksa->obat as $obat)
-                                                                    <li class="mb-1">
-                                                                        <div class="d-flex justify-content-between align-items-center">
-                                                                            <span class="badge badge-secondary">
-                                                                                {{ $obat->nama_obat }} ({{ $obat->kemasan }})
-                                                                            </span>
-                                                                            <small class="text-success font-weight-bold">
-                                                                                Rp {{ number_format($obat->harga, 0, ',', '.') }}
-                                                                            </small>
-                                                                        </div>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        @else
-                                                            <span class="text-muted">-</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <strong class="text-success">
-                                                            Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}
-                                                        </strong>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <div class="text-center py-4">
-                                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
-                                    <h5 class="text-muted">Belum ada riwayat pemeriksaan</h5>
-                                    <p class="text-muted">Data pemeriksaan akan muncul setelah Anda melakukan pemeriksaan
-                                        pasien.</p>
-                                </div>
-                            @endif
-                        </div>
-                        <!-- /.card-body -->
-                        @if(method_exists($periksas, 'hasPages') && $periksas->hasPages())
-                            <div class="card-footer">
-                                {{ $periksas->links() }}
-                            </div>
-                        @endif
-                    </div>
-                    <!-- /.card -->
-                </div>
+   <section class="content py-8 bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 animate-fade-in">
+            <div class="p-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                <h3 class="text-2xl font-bold tracking-tight">
+                    <i class="fas fa-folder-open mr-2"></i> Riwayat Pemeriksaan Pasien
+                </h3>
             </div>
+            <div class="p-6 sm:p-8">
+                @if($periksas->count() > 0)
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-gray-100 text-gray-800">
+                                <tr>
+                                    <th class="p-4 text-sm font-semibold w-12">No</th>
+                                    <th class="p-4 text-sm font-semibold">Nama Pasien</th>
+                                    <th class="p-4 text-sm font-semibold">Tanggal Periksa</th>
+                                    <th class="p-4 text-sm font-semibold">Keluhan</th>
+                                    <th class="p-4 text-sm font-semibold">Catatan Dokter</th>
+                                    <th class="p-4 text-sm font-semibold">Obat</th>
+                                    <th class="p-4 text-sm font-semibold">Biaya Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($periksas as $index => $periksa)
+                                    <tr class="border-b hover:bg-gray-50 transition duration-200">
+                                        <td class="p-4 text-sm font-medium">{{ $index + 1 }}</td>
+                                        <td class="p-4 text-sm">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-user-injured text-blue-600 mr-3 text-lg"></i>
+                                                <span class="font-semibold">{{ $periksa->pasien->name }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="p-4 text-sm">
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 shadow-sm">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                {{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d/m/Y H:i') }}
+                                            </span>
+                                        </td>
+                                        <td class="p-4 text-sm">
+                                            <span class="text-gray-700">{{ $periksa->janjiPeriksa->keluhan ?? '-' }}</span>
+                                        </td>
+                                        <td class="p-4 text-sm">
+                                            <span class="text-gray-700">{{ $periksa->catatan ?? '-' }}</span>
+                                        </td>
+                                        <td class="p-4 text-sm">
+                                            @if($periksa->obat->count() > 0)
+                                                <ul class="space-y-2">
+                                                    @foreach($periksa->obat as $obat)
+                                                        <li class="flex justify-between items-center">
+                                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 shadow-sm">
+                                                                {{ $obat->nama_obat }} ({{ $obat->kemasan }})
+                                                            </span>
+                                                            <span class="text-sm font-semibold text-green-600">
+                                                                Rp {{ number_format($obat->harga, 0, ',', '.') }}
+                                                            </span>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            @else
+                                                <span class="text-gray-500 italic">-</span>
+                                            @endif
+                                        </td>
+                                        <td class="p-4 text-sm">
+                                            <span class="font-semibold text-green-600">
+                                                Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <div class="text-center py-12 animate-fade-in">
+                        <div class="mb-6">
+                            <i class="fas fa-folder-open text-7xl text-gray-300 animate-pulse"></i>
+                        </div>
+                        <h4 class="text-2xl font-semibold text-gray-700">Belum Ada Riwayat Pemeriksaan</h4>
+                        <p class="text-gray-500 mt-2">Data pemeriksaan akan muncul setelah Anda melakukan pemeriksaan pasien.</p>
+                    </div>
+                @endif
+            </div>
+            @if(method_exists($periksas, 'hasPages') && $periksas->hasPages())
+                <div class="p-6 bg-gray-50 border-t">
+                    {{ $periksas->links('vendor.pagination.tailwind') }}
+                </div>
+            @endif
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- Include Tailwind CSS and Font Awesome -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease-out;
+    }
+</style>
 @endsection
 
 @push('scripts')
