@@ -47,7 +47,7 @@
     <section class="content py-8 bg-gray-50 min-h-screen">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden animate-fade-in border border-gray-200">
-                <div class="p-6 bg-gradient-to-r from-green-600 to-green-700 text-white flex justify-between items-center border-b border-green-800">
+                <div class="p-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white flex justify-between items-center border-b border-blue-800">
                     <h3 class="text-lg font-bold">
                         <i class="fas fa-history mr-2"></i> Riwayat Pemeriksaan Saya
                     </h3>
@@ -59,7 +59,7 @@
                     @if(count($periksas) > 0)
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse border border-gray-300" id="riwayatTable">
-                                <thead class="thead-light bg-gray-50 text-gray-800 border-b-2 border-gray-300">
+                                <thead class="thead-light bg-gray-50 text-gray-800 border-b-2 border-blue-100">
                                     <tr>
                                         <th class="p-4 text-sm font-semibold w-12 border-r border-gray-300">No</th>
                                         <th class="p-4 text-sm font-semibold border-r border-gray-300">Tanggal Periksa</th>
@@ -117,7 +117,7 @@
                                                 @if($periksa->obat && count($periksa->obat) > 0)
                                                     <div class="flex flex-col space-y-1">
                                                         @foreach($periksa->obat as $obat)
-                                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 shadow-sm">
+                                                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 shadow-sm">
                                                                 {{ $obat->nama_obat }}
                                                             </span>
                                                         @endforeach
@@ -127,10 +127,10 @@
                                                 @endif
                                             </td>
                                             <td class="p-4 text-sm border-r border-gray-300">
-                                                <strong class="text-green-600">Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</strong>
+                                                <strong class="text-blue-600">Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</strong>
                                             </td>
                                             <td class="p-4 text-sm">
-                                                <button class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600 hover:scale-105 transition transform duration-200" data-toggle="modal" data-target="#detailModal{{ $periksa->id }}">
+                                                <button class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700 hover:scale-105 transition transform duration-200" data-toggle="modal" data-target="#detailModal{{ $periksa->id }}">
                                                     <i class="fas fa-eye mr-1"></i> Detail
                                                 </button>
                                             </td>
@@ -169,7 +169,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td class="py-2 font-medium">Biaya:</td>
-                                                            <td class="py-2"><strong class="text-green-600">Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</strong></td>
+                                                            <td class="py-2"><strong class="text-blue-600">Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</strong></td>
                                                         </tr>
                                                     </table>
                                                 </div>
@@ -182,7 +182,7 @@
                                                                     <strong>{{ $obat->nama_obat }}</strong>
                                                                     <br>
                                                                     <small class="text-gray-600">{{ $obat->kemasan }}</small>
-                                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 float-right">
+                                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 float-right">
                                                                         Rp {{ number_format($obat->harga, 0, ',', '.') }}
                                                                     </span>
                                                                 </li>
@@ -230,20 +230,20 @@
                                             <div class="modal-header bg-blue-600 text-white p-5 border-b border-blue-700">
                                                 <h5 class="modal-title font-semibold text-lg">Keluhan Lengkap</h5>
                                                 <button type="button" class="text-white hover:text-gray-200 transition duration-200" data-dismiss="modal" aria-label="Close">
-                                                <span class="text-2xl font-bold">×</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body p-6">
-                                            {{ $periksa->janjiPeriksa->keluhan }}
-                                        </div>
-                                        <div class="modal-footer p-5 bg-gray-50 flex justify-end border-t border-gray-200">
-                                            <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200" data-dismiss="modal">
-                                                Tutup
-                                            </button>
+                                                    <span class="text-2xl font-bold">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body p-6">
+                                                {{ $periksa->janjiPeriksa->keluhan }}
+                                            </div>
+                                            <div class="modal-footer p-5 bg-gray-50 flex justify-end border-t border-gray-200">
+                                                <button type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200" data-dismiss="modal">
+                                                    Tutup
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             @endif
 
                             <!-- Modal Catatan -->
