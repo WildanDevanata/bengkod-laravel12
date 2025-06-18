@@ -252,7 +252,7 @@
                         @if($janjiPeriksas->count() > 0)
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped" id="janjiPeriksaTable">
-                                    <thead class="thead-dark">
+                                    <thead class="thead-light">
                                     <tr>
                                         <th width="5%">No</th>
                                         <th width="15%">Poli</th>
